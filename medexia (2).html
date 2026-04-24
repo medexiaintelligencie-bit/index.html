@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Medexia | Sovereign Clinical Infrastructure</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-deep: #030407;
+    --bg-glass: rgba(15, 18, 25, 0.6);
+    --border-glass: rgba(255, 255, 255, 0.08);
+    --text-main: #e2e4e9;
+    --text-muted: #6b7280;
+    --accent-blue: #1d4ed8;
+    --accent-glow: rgba(29, 78, 216, 0.3);
+    --gold-alert: #b4975a;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  
+  body {
+    background-color: var(--bg-deep);
+    color: var(--text-main);
+    font-family: 'Inter', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body::before {
+    content: ''; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+    background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none; z-index: 9999;
+  }
+
+  .ambient-light {
+    position: fixed; top: -20vh; left: -20vw; width: 60vw; height: 60vh;
+    background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+    filter: blur(100px); opacity: 0.5; z-index: -1;
+    animation: breathe 10s infinite alternate cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  @keyframes breathe {
+    0% { transform: scale(1) translate(0, 0); opacity: 0.3; }
+    100% { transform: scale(1.2) translate(5vw, 5vh); opacity: 0.6; }
+  }
+
+  .serif { font-family: 'Playfair Display', serif; }
+  .mono { font-family: 'JetBrains Mono', monospace; }
+
+  .container { max-width: 1400px; margin: 0 auto; padding: 0 4rem; }
+
+  nav {
+    position: fixed; top: 0; width: 100%; z-index: 100;
+    background: var(--bg-glass); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border-glass);
+    padding: 1.5rem 4rem; display: flex; justify-content: space-between; align-items: center;
+    transition: transform 0.4s ease;
+  }
+  .logo { font-size: 1.2rem; display: flex; align-items: center; gap: 1rem; font-family: 'Playfair Display', serif; }
+  .logo-bar { width: 3px; height: 20px; background: var(--text-main); transition: height 0.4s ease; }
+  nav:hover .logo-bar { height: 30px; background: var(--accent-blue); }
+  
+  .sys-status { display: flex; align-items: center; gap: 0.8rem; font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-muted); font-family: 'JetBrains Mono', monospace; }
+  .dot { width: 6px; height: 6px; background: #22c55e; border-radius: 50%; box-shadow: 0 0 10px #22c55e; animation: pulse 2s infinite; }
+  @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.4; box-shadow: 0 0 2px #22c55e; } 100% { opacity: 1; } }
+
+  .hero {
+    min-height: 100vh; display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: 5rem;
+    padding-top: 8rem; position: relative;
+  }
+  
+  .eyebrow {
+    font-size: 0.65rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--text-muted);
+    margin-bottom: 2rem; display: inline-flex; align-items: center; gap: 1rem;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .eyebrow::before { content: ''; width: 30px; height: 1px; background: var(--accent-blue); }
+
+  h1 { font-size: clamp(3.5rem, 5vw, 5rem); line-height: 1.05; font-weight: 400; margin-bottom: 2rem; font-family: 'Playfair Display', serif; }
+  h1 i { color: var(--text-muted); font-style: italic; }
+  
+  .subtitle { font-size: 1.1rem; color: var(--text-muted); max-width: 480px; line-height: 1.8; margin-bottom: 3rem; }
+
+  .btn-elite {
+    display: inline-flex; align-items: center; gap: 1.5rem;
+    background: transparent; border: 1px solid var(--border-glass);
+    padding: 1.2rem 2.5rem; color: var(--text-main); text-decoration: none;
+    font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase;
+    position: relative; overflow: hidden; transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    cursor: pointer; font-family: 'JetBrains Mono', monospace;
+  }
+  .btn-elite::before {
+    content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
+    transition: left 0.7s ease;
+  }
+  .btn-elite:hover { border-color: var(--text-main); background: rgba(255,255,255,0.02); }
+  .btn-elite:hover::before { left: 100%; }
+  .btn-elite span { color: var(--text-muted); transition: color 0.3s; }
+  .btn-elite:hover span { color: var(--gold-alert); }
+
+  .scanner-box {
+    background: var(--bg-glass); border: 1px solid var(--border-glass);
+    border-radius: 2px; padding: 3rem; position: relative;
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+  }
+  .scanner-header {
+    display: flex; justify-content: space-between; border-bottom: 1px solid var(--border-glass);
+    padding-bottom: 1rem; margin-bottom: 2rem;
+  }
+  
+  .ct-scan {
+    position: absolute; top: 0; right: 10%; width: 120px; height: 120px;
+    border-radius: 50%; border: 1px solid rgba(29, 78, 216, 0.2);
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0.3; pointer-events: none;
+  }
+  .ct-scan::after {
+    content: ''; position: absolute; width: 50%; height: 2px; background: var(--accent-blue);
+    top: 50%; left: 50%; transform-origin: 0% 50%;
+    animation: radarSpin 4s linear infinite;
+    box-shadow: 0 0 15px var(--accent-blue);
+  }
+  @keyframes radarSpin { 100% { transform: rotate(360deg); } }
+
+  .data-row { margin-bottom: 1.5rem; }
+  .d-label { font-size: 0.75rem; color: var(--text-muted); display: block; margin-bottom: 0.5rem; font-family: 'JetBrains Mono', monospace; }
+  .d-val { font-size: 1.2rem; color: var(--text-main); display: flex; justify-content: space-between; font-family: 'JetBrains Mono', monospace; }
+  .d-val.alert { color: var(--gold-alert); }
+  
+  .bar-bg { width: 100%; height: 2px; background: var(--border-glass); margin-top: 0.8rem; position: relative; overflow: hidden;}
+  .bar-fill { position: absolute; top: 0; left: 0; height: 100%; background: var(--text-main); width: 0%; transition: width 2s cubic-bezier(0.16, 1, 0.3, 1); }
+  .bar-fill.alert { background: var(--gold-alert); }
+
+  .section { padding: 10rem 0; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; margin-top: 4rem; }
+  
+  .risk-card {
+    padding: 3rem; border: 1px solid var(--border-glass); background: transparent;
+    transition: all 0.5s ease; position: relative;
+  }
+  .risk-card::after {
+    content: ''; position: absolute; bottom: 0; left: 0; width: 0%; height: 2px;
+    background: var(--text-main); transition: width 0.5s ease;
+  }
+  .risk-card:hover { background: var(--bg-glass); transform: translateY(-10px); }
+  .risk-card:hover::after { width: 100%; }
+  
+  .risk-num { font-size: 0.7rem; color: var(--text-muted); border-bottom: 1px solid var(--border-glass); padding-bottom: 1rem; margin-bottom: 2rem; display: block; font-family: 'JetBrains Mono', monospace; }
+  .risk-title { font-size: 1.4rem; margin-bottom: 1rem; font-family: 'Playfair Display', serif; }
+  .risk-desc { font-size: 0.85rem; color: var(--text-muted); line-height: 1.7; }
+
+  .black-card {
+    background: #000; border: 1px solid #222; padding: 5rem;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center;
+    position: relative; overflow: hidden;
+  }
+  .black-card::before {
+    content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+    background: linear-gradient(45deg, transparent 40%, rgba(255,255,255,0.03) 50%, transparent 60%);
+    transform: rotate(30deg); pointer-events: none;
+  }
+
+  .reveal { opacity: 0; transform: translateY(40px); transition: all 1.2s cubic-bezier(0.16, 1, 0.3, 1); }
+  .reveal.active { opacity: 1; transform: translateY(0); }
+
+  @media (max-width: 1024px) {
+    .hero { grid-template-columns: 1fr; padding-top: 10rem; }
+    .grid-3, .black-card { grid-template-columns: 1fr; }
+    .container { padding: 0 2rem; }
+    .ct-scan { display: none; }
+  }
+</style>
+</head>
+<body>
+
+  <div class="ambient-light"></div>
+
+  <nav id="navbar">
+    <div class="logo">
+      <div class="logo-bar"></div> Medexia
+    </div>
+    <div class="sys-status">
+      <div class="dot"></div> <span id="scramble-text">SYS.ACTIVE</span>
+    </div>
+  </nav>
+
+  <section class="container hero">
+    <div class="reveal">
+      <div class="eyebrow">Layer 0 Orchestration Protocol</div>
+      <h1>Clinical Immunity. <br><i>Zero Latency.</i></h1>
+      <p class="subtitle">
+        A parametric architecture orchestrating real-time medical data flows. We eliminate record fragmentation and shield your clinic against critical nLPD legal liabilities.
+      </p>
+      <a href="#audit" class="btn-elite">
+        Initialize Passive Diagnostic <span>CHF 970</span>
+      </a>
+    </div>
+
+    <div class="scanner-box reveal" style="transition-delay: 0.2s;">
+      <div class="ct-scan"></div>
+      <div class="scanner-header">
+        <span style="font-size: 0.65rem; letter-spacing: 0.2em; color: var(--text-muted); font-family: 'JetBrains Mono', monospace;">VULNERABILITY TELEMETRY</span>
+      </div>
+      
+      <div>
+        <div class="data-row">
+          <span class="d-label">nLPD Compliance Integrity</span>
+          <div class="d-val alert">Risk Detected <span>(Art. 5)</span></div>
+          <div class="bar-bg"><div class="bar-fill alert" data-width="78%"></div></div>
+        </div>
+        
+        <div class="data-row">
+          <span class="d-label">Operational Time Hemorrhage</span>
+          <div class="d-val">120 min / Day <span>Critical</span></div>
+          <div class="bar-bg"><div class="bar-fill alert" data-width="85%"></div></div>
+        </div>
+
+        <div class="data-row" style="margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border-glass);">
+          <span class="d-label" style="color: var(--gold-alert);">PROJECTED FINANCIAL EXPOSURE</span>
+          <div style="font-size: 2.2rem; margin-top: 0.5rem; color: var(--gold-alert); font-family: 'Playfair Display', serif;">CHF 250,000+</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="container section">
+    <div class="reveal">
+      <div class="eyebrow">Vectors of Capital Loss</div>
+      <h2 class="serif" style="font-size: 2.5rem; max-width: 600px;">Your current infrastructure is silently bleeding capital.</h2>
+    </div>
+
+    <div class="grid-3">
+      <div class="risk-card reveal" style="transition-delay: 0.1s;">
+        <span class="risk-num">VECTOR_01</span>
+        <h3 class="risk-title">Data Fragmentation</h3>
+        <p class="risk-desc">Disconnected legacy systems cause an average operational loss of 120 minutes per physician daily in chart reconciliation.</p>
+      </div>
+      <div class="risk-card reveal" style="transition-delay: 0.3s;">
+        <span class="risk-num">VECTOR_02</span>
+        <h3 class="risk-title">nLPD Legal Exposure</h3>
+        <p class="risk-desc">Unaudited data transit between departments. Without a central orchestration layer, your clinic is exposed to imminent federal audits and fines.</p>
+      </div>
+      <div class="risk-card reveal" style="transition-delay: 0.5s;">
+        <span class="risk-num">VECTOR_03</span>
+        <h3 class="risk-title">Prestige Latency</h3>
+        <p class="risk-desc">Friction in generating cross-diagnostics degrades the elite patient experience, severely compromising long-term retention.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="audit" class="container section">
+    <div class="black-card reveal">
+      <div>
+        <div class="eyebrow" style="color: var(--text-main);">Pre-Deployment Phase</div>
+        <h2 class="serif" style="font-size: 3rem; margin-bottom: 1.5rem;">Silent Diagnostic.</h2>
+        <p class="risk-desc" style="max-width: 400px; font-size: 1rem;">
+          A passive forensic analysis of your current architecture. Zero invasive integration. We quantify your operational and legal hemorrhage before deploying the continuous infrastructure layer.
+        </p>
+      </div>
+      <div>
+        <div style="font-size: 2.5rem; margin-bottom: 2rem; border-bottom: 1px solid #333; padding-bottom: 1rem; font-family: 'Playfair Display', serif;">
+          CHF 970 <span style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; font-family: 'JetBrains Mono', monospace;">/ Single Audit</span>
+        </div>
+        <a href="mailto:director@medexia.com" class="btn-elite" style="width: 100%; justify-content: center; background: #fff; color: #000;">
+          Request Protocol
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <footer class="container" style="padding: 3rem 0; border-top: 1px solid var(--border-glass); display: flex; justify-content: space-between; font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 2rem; font-family: 'JetBrains Mono', monospace;">
+    <div>&copy; 2026 MEDEXIA INFRASTRUCTURE</div>
+    <div>ZURICH / LONDON</div>
+  </footer>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const reveals = document.querySelectorAll(".reveal");
+      const revealOnScroll = () => {
+        const windowHeight = window.innerHeight;
+        reveals.forEach(reveal => {
+          const revealTop = reveal.getBoundingClientRect().top;
+          if (revealTop < windowHeight - 100) reveal.classList.add("active");
+        });
+      };
+      window.addEventListener("scroll", revealOnScroll);
+      revealOnScroll();
+
+      const bars = document.querySelectorAll(".bar-fill");
+      const animateBars = () => {
+        bars.forEach(bar => {
+          const barTop = bar.getBoundingClientRect().top;
+          if (barTop < window.innerHeight - 50) bar.style.width = bar.getAttribute("data-width");
+        });
+      };
+      window.addEventListener("scroll", animateBars);
+      animateBars();
+
+      const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+      let interval = null;
+      const target = document.getElementById("scramble-text");
+      const originalText = target.innerText;
+      setInterval(() => {
+        let iteration = 0;
+        clearInterval(interval);
+        interval = setInterval(() => {
+          target.innerText = target.innerText.split("").map((letter, index) => {
+            if (index < iteration) return originalText[index];
+            return letters[Math.floor(Math.random() * 36)];
+          }).join("");
+          if (iteration >= originalText.length) clearInterval(interval);
+          iteration += 1 / 3;
+        }, 30);
+      }, 6000);
+
+      let prevScrollpos = window.pageYOffset;
+      window.onscroll = function() {
+        let currentScrollPos = window.pageYOffset;
+        if (prevScrollpos > currentScrollPos) {
+          document.getElementById("navbar").style.transform = "translateY(0)";
+        } else {
+          document.getElementById("navbar").style.transform = "translateY(-100%)";
+        }
+        prevScrollpos = currentScrollPos;
+        revealOnScroll();
+        animateBars();
+      }
+    });
+  </script>
+</body>
+</html>
