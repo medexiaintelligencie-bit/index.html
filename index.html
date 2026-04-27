@@ -3,334 +3,198 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Medexia | Sovereign Clinical Infrastructure</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<title>MEDRAL — Medical Intelligence Terminal</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Space+Mono:wght@400&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg-deep: #030407;
-    --bg-glass: rgba(15, 18, 25, 0.6);
-    --border-glass: rgba(255, 255, 255, 0.08);
-    --text-main: #e2e4e9;
-    --text-muted: #6b7280;
-    --accent-blue: #1d4ed8;
-    --accent-glow: rgba(29, 78, 216, 0.3);
-    --gold-alert: #b4975a;
-  }
-
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  
-  body {
-    background-color: var(--bg-deep);
-    color: var(--text-main);
-    font-family: 'Inter', sans-serif;
-    font-weight: 300;
-    overflow-x: hidden;
-    -webkit-font-smoothing: antialiased;
-  }
-
-  body::before {
-    content: ''; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-    background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
-    pointer-events: none; z-index: 9999;
-  }
-
-  .ambient-light {
-    position: fixed; top: -20vh; left: -20vw; width: 60vw; height: 60vh;
-    background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
-    filter: blur(100px); opacity: 0.5; z-index: -1;
-    animation: breathe 10s infinite alternate cubic-bezier(0.4, 0, 0.2, 1);
-  }
-  @keyframes breathe {
-    0% { transform: scale(1) translate(0, 0); opacity: 0.3; }
-    100% { transform: scale(1.2) translate(5vw, 5vh); opacity: 0.6; }
-  }
-
-  .serif { font-family: 'Playfair Display', serif; }
-  .mono { font-family: 'JetBrains Mono', monospace; }
-
-  .container { max-width: 1400px; margin: 0 auto; padding: 0 4rem; }
-
-  nav {
-    position: fixed; top: 0; width: 100%; z-index: 100;
-    background: var(--bg-glass); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-    border-bottom: 1px solid var(--border-glass);
-    padding: 1.5rem 4rem; display: flex; justify-content: space-between; align-items: center;
-    transition: transform 0.4s ease;
-  }
-  .logo { font-size: 1.2rem; display: flex; align-items: center; gap: 1rem; font-family: 'Playfair Display', serif; }
-  .logo-bar { width: 3px; height: 20px; background: var(--text-main); transition: height 0.4s ease; }
-  nav:hover .logo-bar { height: 30px; background: var(--accent-blue); }
-  
-  .sys-status { display: flex; align-items: center; gap: 0.8rem; font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-muted); font-family: 'JetBrains Mono', monospace; }
-  .dot { width: 6px; height: 6px; background: #22c55e; border-radius: 50%; box-shadow: 0 0 10px #22c55e; animation: pulse 2s infinite; }
-  @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.4; box-shadow: 0 0 2px #22c55e; } 100% { opacity: 1; } }
-
-  .hero {
-    min-height: 100vh; display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: 5rem;
-    padding-top: 8rem; position: relative;
-  }
-  
-  .eyebrow {
-    font-size: 0.65rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--text-muted);
-    margin-bottom: 2rem; display: inline-flex; align-items: center; gap: 1rem;
-    font-family: 'JetBrains Mono', monospace;
-  }
-  .eyebrow::before { content: ''; width: 30px; height: 1px; background: var(--accent-blue); }
-
-  h1 { font-size: clamp(3.5rem, 5vw, 5rem); line-height: 1.05; font-weight: 400; margin-bottom: 2rem; font-family: 'Playfair Display', serif; }
-  h1 i { color: var(--text-muted); font-style: italic; }
-  
-  .subtitle { font-size: 1.1rem; color: var(--text-muted); max-width: 480px; line-height: 1.8; margin-bottom: 3rem; }
-
-  .btn-elite {
-    display: inline-flex; align-items: center; gap: 1.5rem;
-    background: transparent; border: 1px solid var(--border-glass);
-    padding: 1.2rem 2.5rem; color: var(--text-main); text-decoration: none;
-    font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase;
-    position: relative; overflow: hidden; transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-    cursor: pointer; font-family: 'JetBrains Mono', monospace;
-  }
-  .btn-elite::before {
-    content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
-    transition: left 0.7s ease;
-  }
-  .btn-elite:hover { border-color: var(--text-main); background: rgba(255,255,255,0.02); }
-  .btn-elite:hover::before { left: 100%; }
-  .btn-elite span { color: var(--text-muted); transition: color 0.3s; }
-  .btn-elite:hover span { color: var(--gold-alert); }
-
-  .scanner-box {
-    background: var(--bg-glass); border: 1px solid var(--border-glass);
-    border-radius: 2px; padding: 3rem; position: relative;
-    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-    box-shadow: 0 20px 40px rgba(0,0,0,0.5);
-  }
-  .scanner-header {
-    display: flex; justify-content: space-between; border-bottom: 1px solid var(--border-glass);
-    padding-bottom: 1rem; margin-bottom: 2rem;
-  }
-  
-  .ct-scan {
-    position: absolute; top: 0; right: 10%; width: 120px; height: 120px;
-    border-radius: 50%; border: 1px solid rgba(29, 78, 216, 0.2);
-    display: flex; align-items: center; justify-content: center;
-    opacity: 0.3; pointer-events: none;
-  }
-  .ct-scan::after {
-    content: ''; position: absolute; width: 50%; height: 2px; background: var(--accent-blue);
-    top: 50%; left: 50%; transform-origin: 0% 50%;
-    animation: radarSpin 4s linear infinite;
-    box-shadow: 0 0 15px var(--accent-blue);
-  }
-  @keyframes radarSpin { 100% { transform: rotate(360deg); } }
-
-  .data-row { margin-bottom: 1.5rem; }
-  .d-label { font-size: 0.75rem; color: var(--text-muted); display: block; margin-bottom: 0.5rem; font-family: 'JetBrains Mono', monospace; }
-  .d-val { font-size: 1.2rem; color: var(--text-main); display: flex; justify-content: space-between; font-family: 'JetBrains Mono', monospace; }
-  .d-val.alert { color: var(--gold-alert); }
-  
-  .bar-bg { width: 100%; height: 2px; background: var(--border-glass); margin-top: 0.8rem; position: relative; overflow: hidden;}
-  .bar-fill { position: absolute; top: 0; left: 0; height: 100%; background: var(--text-main); width: 0%; transition: width 2s cubic-bezier(0.16, 1, 0.3, 1); }
-  .bar-fill.alert { background: var(--gold-alert); }
-
-  .section { padding: 10rem 0; }
-  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; margin-top: 4rem; }
-  
-  .risk-card {
-    padding: 3rem; border: 1px solid var(--border-glass); background: transparent;
-    transition: all 0.5s ease; position: relative;
-  }
-  .risk-card::after {
-    content: ''; position: absolute; bottom: 0; left: 0; width: 0%; height: 2px;
-    background: var(--text-main); transition: width 0.5s ease;
-  }
-  .risk-card:hover { background: var(--bg-glass); transform: translateY(-10px); }
-  .risk-card:hover::after { width: 100%; }
-  
-  .risk-num { font-size: 0.7rem; color: var(--text-muted); border-bottom: 1px solid var(--border-glass); padding-bottom: 1rem; margin-bottom: 2rem; display: block; font-family: 'JetBrains Mono', monospace; }
-  .risk-title { font-size: 1.4rem; margin-bottom: 1rem; font-family: 'Playfair Display', serif; }
-  .risk-desc { font-size: 0.85rem; color: var(--text-muted); line-height: 1.7; }
-
-  .black-card {
-    background: #000; border: 1px solid #222; padding: 5rem;
-    display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center;
-    position: relative; overflow: hidden;
-  }
-  .black-card::before {
-    content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
-    background: linear-gradient(45deg, transparent 40%, rgba(255,255,255,0.03) 50%, transparent 60%);
-    transform: rotate(30deg); pointer-events: none;
-  }
-
-  .reveal { opacity: 0; transform: translateY(40px); transition: all 1.2s cubic-bezier(0.16, 1, 0.3, 1); }
-  .reveal.active { opacity: 1; transform: translateY(0); }
-
-  @media (max-width: 1024px) {
-    .hero { grid-template-columns: 1fr; padding-top: 10rem; }
-    .grid-3, .black-card { grid-template-columns: 1fr; }
-    .container { padding: 0 2rem; }
-    .ct-scan { display: none; }
-  }
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+:root{
+  --void:#000;--deep:#050505;--surface:#080808;--border:#111;--border2:#181818;
+  --white:#fff;--off:#e8e4df;--gold:#b8a88a;--gold2:#6b5f4f;
+  --dim:#2a2a2a;--muted:#3a3a3a;--text:#8a8680;--text2:#4a4744;
+  --mono:'Space Mono',monospace;--serif:'Cormorant Garamond',serif;
+}
+body{background:var(--void);color:var(--text);font-family:var(--serif);font-weight:300;overflow-x:hidden;cursor:crosshair}
+body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");pointer-events:none;z-index:9999}
+.cur{position:fixed;top:0;left:0;width:1px;height:100vh;background:rgba(184,168,138,0.06);pointer-events:none;z-index:9998;transition:left 0.08s linear}
+nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;justify-content:space-between;align-items:center;padding:24px 64px;background:rgba(0,0,0,0.96);border-bottom:1px solid var(--border);backdrop-filter:blur(40px)}
+.nlogo{font-family:var(--mono);font-size:10px;letter-spacing:0.5em;color:var(--white);text-transform:uppercase}
+.nstatus{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:9px;letter-spacing:0.25em;color:var(--text2);text-transform:uppercase}
+.dot{width:4px;height:4px;border-radius:50%;background:var(--gold);animation:pulse 3s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.2}}
+.ncta{font-family:var(--mono);font-size:9px;letter-spacing:0.3em;color:var(--gold);text-decoration:none;text-transform:uppercase;border:1px solid var(--gold2);padding:9px 22px;transition:all 0.4s}
+.ncta:hover{background:var(--gold);color:var(--void)}
+.hero{height:100vh;display:grid;grid-template-rows:1fr auto;border-bottom:1px solid var(--border);position:relative;overflow:hidden}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 70% 40%,rgba(184,168,138,0.03) 0%,transparent 70%)}
+.hero-vertical{position:absolute;top:50%;right:64px;transform:translateY(-50%);font-family:var(--mono);font-size:8px;letter-spacing:0.4em;color:var(--text2);text-transform:uppercase;writing-mode:vertical-rl;opacity:0;animation:fadeIn 2s 1s forwards}
+.hero-main{display:flex;flex-direction:column;justify-content:flex-end;padding:140px 64px 0}
+.hero-tag{font-family:var(--mono);font-size:9px;letter-spacing:0.45em;color:var(--gold);text-transform:uppercase;margin-bottom:52px;opacity:0;animation:slideUp 1s 0.3s forwards}
+.hero-h1{font-size:clamp(56px,9vw,130px);font-weight:300;line-height:0.88;letter-spacing:-0.025em;color:var(--white);opacity:0;animation:slideUp 1s 0.5s forwards}
+.hero-h1 em{font-style:italic;color:var(--gold)}
+.hero-h1 .dim{color:var(--text2)}
+.hero-bottom{padding:52px 64px 72px;display:grid;grid-template-columns:1fr auto;align-items:end;gap:40px;border-top:1px solid var(--border);opacity:0;animation:slideUp 1s 0.8s forwards}
+.hero-desc{font-size:13px;color:var(--text2);line-height:2;letter-spacing:0.04em;max-width:380px}
+.hero-num{font-size:64px;font-weight:300;color:var(--white);line-height:1;letter-spacing:-0.04em;text-align:right}
+.hero-num span{font-size:28px;color:var(--gold)}
+.hero-numlabel{font-family:var(--mono);font-size:8px;letter-spacing:0.4em;color:var(--text2);text-transform:uppercase;margin-top:8px;text-align:right}
+.s{padding:130px 64px;border-bottom:1px solid var(--border)}
+.slabel{font-family:var(--mono);font-size:8px;letter-spacing:0.5em;color:var(--text2);text-transform:uppercase;display:flex;align-items:center;gap:24px;margin-bottom:90px}
+.slabel::after{content:'';flex:1;height:1px;background:var(--border2)}
+.manifesto-text{font-size:clamp(30px,4.5vw,62px);font-weight:300;line-height:1.2;letter-spacing:-0.015em;color:var(--white);max-width:1000px;margin-bottom:70px}
+.manifesto-text em{font-style:italic;color:var(--gold)}
+.manifesto-text .fade{color:var(--text2)}
+.manifesto-sub{font-size:13px;color:var(--text2);line-height:2;max-width:520px;letter-spacing:0.03em}
+.lgrid{display:grid;grid-template-columns:1fr 1fr;background:var(--border);gap:1px;border:1px solid var(--border)}
+.litem{background:var(--void);padding:70px 56px;position:relative;transition:background 0.5s}
+.litem:hover{background:var(--deep)}
+.litem::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(184,168,138,0.008) 3px,rgba(184,168,138,0.008) 4px);opacity:0;transition:opacity 0.5s;pointer-events:none}
+.litem:hover::before{opacity:1}
+.lnum{font-family:var(--mono);font-size:8px;letter-spacing:0.5em;color:var(--gold2);text-transform:uppercase;margin-bottom:40px}
+.lic{position:absolute;top:70px;right:56px;width:28px;height:28px;border:1px solid var(--dim);display:flex;align-items:center;justify-content:center}
+.lic svg{width:12px;height:12px;stroke:var(--gold);fill:none;stroke-width:1}
+.ltitle{font-size:26px;font-weight:300;color:var(--white);line-height:1.15;margin-bottom:22px}
+.ldesc{font-size:13px;color:var(--text2);line-height:2}
+.mtable{width:100%;border-collapse:collapse}
+.mtable th{font-family:var(--mono);font-size:8px;letter-spacing:0.4em;color:var(--text2);text-transform:uppercase;text-align:left;padding:14px 0;border-bottom:1px solid var(--border2);font-weight:400}
+.mtable td{padding:34px 0;border-bottom:1px solid var(--border);vertical-align:baseline;transition:color 0.3s}
+.mtable tr:hover td{color:var(--white)}
+.mn{font-family:var(--mono);font-size:9px;color:var(--gold2);padding-right:48px}
+.mname{font-size:20px;font-weight:300;color:var(--off)}
+.mreg{font-family:var(--mono);font-size:9px;letter-spacing:0.18em;color:var(--text2);text-transform:uppercase}
+.mprice{font-size:24px;font-weight:300;color:var(--white);text-align:right}
+.mst{font-family:var(--mono);font-size:8px;letter-spacing:0.22em;text-transform:uppercase;text-align:right}
+.mst.live{color:var(--gold)}.mst.soon{color:var(--text2)}
+.million-wrap{text-align:center;padding:100px 0}
+.million-n{font-size:clamp(100px,18vw,220px);font-weight:300;color:var(--white);line-height:1;letter-spacing:-0.05em;opacity:0.08;transition:opacity 0.6s;cursor:default}
+.million-n:hover{opacity:1}
+.million-l{font-family:var(--mono);font-size:9px;letter-spacing:0.55em;color:var(--gold);text-transform:uppercase;margin-top:28px}
+.million-s{font-size:13px;color:var(--text2);margin-top:18px;max-width:360px;margin-left:auto;margin-right:auto;line-height:1.9}
+.cta-wrap{display:grid;grid-template-columns:1fr 1fr;background:var(--border);gap:1px}
+.cta-l{background:var(--void);padding:110px 64px}
+.cta-r{background:var(--deep);padding:110px 64px;display:flex;flex-direction:column;justify-content:center}
+.cta-price{font-size:80px;font-weight:300;color:var(--white);line-height:1;letter-spacing:-0.04em}
+.cta-plabel{font-family:var(--mono);font-size:9px;letter-spacing:0.35em;color:var(--gold2);text-transform:uppercase;margin-bottom:52px;margin-top:6px}
+.cta-h{font-size:clamp(36px,4vw,58px);font-weight:300;color:var(--white);line-height:1.15;margin-bottom:22px}
+.cta-h em{font-style:italic;color:var(--gold)}
+.cta-d{font-size:13px;color:var(--text2);line-height:2;max-width:360px;margin-bottom:56px}
+.cta-btn{display:inline-block;font-family:var(--mono);font-size:9px;letter-spacing:0.4em;text-transform:uppercase;color:var(--void);background:var(--gold);padding:18px 44px;text-decoration:none;transition:all 0.4s}
+.cta-btn:hover{background:var(--white)}
+.cta-item{padding:22px 0;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;gap:18px}
+.cta-dot{width:3px;height:3px;border-radius:50%;background:var(--gold);flex-shrink:0;margin-top:8px}
+.cta-t{font-size:13px;color:var(--text2);line-height:1.8}
+footer{padding:36px 64px;display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--border)}
+.flogo{font-family:var(--mono);font-size:9px;letter-spacing:0.45em;color:var(--text2);text-transform:uppercase}
+.fnote{font-family:var(--mono);font-size:8px;letter-spacing:0.25em;color:var(--muted);text-transform:uppercase}
+.r{opacity:0;transform:translateY(18px);transition:opacity 0.9s,transform 0.9s}
+.r.v{opacity:1;transform:translateY(0)}
+@keyframes fadeIn{to{opacity:1}}
+@keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
 </style>
 </head>
 <body>
-
-  <div class="ambient-light"></div>
-
-  <nav id="navbar">
-    <div class="logo">
-      <div class="logo-bar"></div> Medexia
+<div class="cur" id="cur"></div>
+<nav>
+  <div class="nlogo">Medral</div>
+  <div class="nstatus"><div class="dot"></div>Terminal Active — Global</div>
+  <a href="#signal" class="ncta">Signal Audit — CHF 970</a>
+</nav>
+<div class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-vertical">Medical Intelligence Terminal · Est. 2025</div>
+  <div class="hero-main">
+    <div class="hero-tag">Signal Active — Zürich · London · Dubai</div>
+    <h1 class="hero-h1">The<br><em>intelligence</em><br><span class="dim">your clinic</span><br>cannot see.</h1>
+  </div>
+  <div class="hero-bottom">
+    <p class="hero-desc">The first medical intelligence terminal built exclusively for elite private clinics. Real-time regulatory radar. Operational benchmarking. Competitive signal. One closed network.</p>
+    <div>
+      <div class="hero-num">95<span>%</span></div>
+      <div class="hero-numlabel">Operating margin at scale</div>
     </div>
-    <div class="sys-status">
-      <div class="dot"></div> <span id="scramble-text">SYS.ACTIVE</span>
+  </div>
+</div>
+<div class="s">
+  <div class="slabel">What is Medral</div>
+  <div class="r">
+    <p class="manifesto-text"><span class="fade">Medral is not software.</span><br><span class="fade">Medral is not a consultancy.</span><br>Medral is <em>cognitive infrastructure</em><br>for medicine's most demanding<br>institutions.</p>
+    <p class="manifesto-sub">Bloomberg Terminal gave global finance a permanent information advantage over those who operated without it. No one cancels Bloomberg. Medral is Bloomberg for elite private medicine — a market no one has built for. Until now.</p>
+  </div>
+</div>
+<div class="s" style="padding:130px 0">
+  <div style="padding:0 64px"><div class="slabel r">The Four Layers</div></div>
+  <div class="lgrid r">
+    <div class="litem">
+      <div class="lnum">Layer 01</div>
+      <div class="lic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></div>
+      <h3 class="ltitle">Regulatory<br>Radar</h3>
+      <p class="ldesc">Real-time monitoring of nLPD, GDPR, ICO, HIPAA and Gulf health law. When anything changes, Medral delivers the exact signal — article cited, fine quantified, timeline defined. You know before your lawyer does.</p>
     </div>
-  </nav>
-
-  <section class="container hero">
-    <div class="reveal">
-      <div class="eyebrow">Layer 0 Orchestration Protocol</div>
-      <h1>Clinical Immunity. <br><i>Zero Latency.</i></h1>
-      <p class="subtitle">
-        A parametric architecture orchestrating real-time medical data flows. We eliminate record fragmentation and shield your clinic against critical nLPD legal liabilities.
-      </p>
-      <a href="#audit" class="btn-elite">
-        Initialize Passive Diagnostic <span>CHF 970</span>
-      </a>
+    <div class="litem">
+      <div class="lnum">Layer 02</div>
+      <div class="lic"><svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M7 16l4-4 3 3 4-5"/></svg></div>
+      <h3 class="ltitle">Operational<br>Intelligence</h3>
+      <p class="ldesc">Monthly quantification of the capital your clinic leaves on the table versus peer institutions. Not advice. A number. The exact distance between where you operate and where top-quartile clinics at your scale perform.</p>
     </div>
-
-    <div class="scanner-box reveal" style="transition-delay: 0.2s;">
-      <div class="ct-scan"></div>
-      <div class="scanner-header">
-        <span style="font-size: 0.65rem; letter-spacing: 0.2em; color: var(--text-muted); font-family: 'JetBrains Mono', monospace;">VULNERABILITY TELEMETRY</span>
-      </div>
-      
-      <div>
-        <div class="data-row">
-          <span class="d-label">nLPD Compliance Integrity</span>
-          <div class="d-val alert">Risk Detected <span>(Art. 5)</span></div>
-          <div class="bar-bg"><div class="bar-fill alert" data-width="78%"></div></div>
-        </div>
-        
-        <div class="data-row">
-          <span class="d-label">Operational Time Hemorrhage</span>
-          <div class="d-val">120 min / Day <span>Critical</span></div>
-          <div class="bar-bg"><div class="bar-fill alert" data-width="85%"></div></div>
-        </div>
-
-        <div class="data-row" style="margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border-glass);">
-          <span class="d-label" style="color: var(--gold-alert);">PROJECTED FINANCIAL EXPOSURE</span>
-          <div style="font-size: 2.2rem; margin-top: 0.5rem; color: var(--gold-alert); font-family: 'Playfair Display', serif;">CHF 250,000+</div>
-        </div>
-      </div>
+    <div class="litem">
+      <div class="lnum">Layer 03</div>
+      <div class="lic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="2"/><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg></div>
+      <h3 class="ltitle">Competitive<br>Signal</h3>
+      <p class="ldesc">Continuous tracking of your direct competitors. Certifications, hires, expansions, leadership shifts, equipment acquisitions. Delivered monthly as a precise movement map. No clinic can do this alone. Medral does it for all simultaneously.</p>
     </div>
-  </section>
-
-  <section class="container section">
-    <div class="reveal">
-      <div class="eyebrow">Vectors of Capital Loss</div>
-      <h2 class="serif" style="font-size: 2.5rem; max-width: 600px;">Your current infrastructure is silently bleeding capital.</h2>
+    <div class="litem">
+      <div class="lnum">Layer 04</div>
+      <div class="lic"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="1"/><path d="M8 21h8M12 17v4"/></svg></div>
+      <h3 class="ltitle">Exclusive<br>Network Benchmark</h3>
+      <p class="ldesc">Anonymous aggregated data across every Medral client produces the only benchmark dataset that exists for elite private medicine globally. Your Medral Friction Coefficient. Your percentile. Impossible without the network. The network only exists because we arrived first.</p>
     </div>
-
-    <div class="grid-3">
-      <div class="risk-card reveal" style="transition-delay: 0.1s;">
-        <span class="risk-num">VECTOR_01</span>
-        <h3 class="risk-title">Data Fragmentation</h3>
-        <p class="risk-desc">Disconnected legacy systems cause an average operational loss of 120 minutes per physician daily in chart reconciliation.</p>
-      </div>
-      <div class="risk-card reveal" style="transition-delay: 0.3s;">
-        <span class="risk-num">VECTOR_02</span>
-        <h3 class="risk-title">nLPD Legal Exposure</h3>
-        <p class="risk-desc">Unaudited data transit between departments. Without a central orchestration layer, your clinic is exposed to imminent federal audits and fines.</p>
-      </div>
-      <div class="risk-card reveal" style="transition-delay: 0.5s;">
-        <span class="risk-num">VECTOR_03</span>
-        <h3 class="risk-title">Prestige Latency</h3>
-        <p class="risk-desc">Friction in generating cross-diagnostics degrades the elite patient experience, severely compromising long-term retention.</p>
-      </div>
-    </div>
-  </section>
-
-  <section id="audit" class="container section">
-    <div class="black-card reveal">
-      <div>
-        <div class="eyebrow" style="color: var(--text-main);">Pre-Deployment Phase</div>
-        <h2 class="serif" style="font-size: 3rem; margin-bottom: 1.5rem;">Silent Diagnostic.</h2>
-        <p class="risk-desc" style="max-width: 400px; font-size: 1rem;">
-          A passive forensic analysis of your current architecture. Zero invasive integration. We quantify your operational and legal hemorrhage before deploying the continuous infrastructure layer.
-        </p>
-      </div>
-      <div>
-        <div style="font-size: 2.5rem; margin-bottom: 2rem; border-bottom: 1px solid #333; padding-bottom: 1rem; font-family: 'Playfair Display', serif;">
-          CHF 970 <span style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; font-family: 'JetBrains Mono', monospace;">/ Single Audit</span>
-        </div>
-        <a href="mailto:director@medexia.com" class="btn-elite" style="width: 100%; justify-content: center; background: #fff; color: #000;">
-          Request Protocol
-        </a>
-      </div>
-    </div>
-  </section>
-
-  <footer class="container" style="padding: 3rem 0; border-top: 1px solid var(--border-glass); display: flex; justify-content: space-between; font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 2rem; font-family: 'JetBrains Mono', monospace;">
-    <div>&copy; 2026 MEDEXIA INFRASTRUCTURE</div>
-    <div>ZURICH / LONDON</div>
-  </footer>
-
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const reveals = document.querySelectorAll(".reveal");
-      const revealOnScroll = () => {
-        const windowHeight = window.innerHeight;
-        reveals.forEach(reveal => {
-          const revealTop = reveal.getBoundingClientRect().top;
-          if (revealTop < windowHeight - 100) reveal.classList.add("active");
-        });
-      };
-      window.addEventListener("scroll", revealOnScroll);
-      revealOnScroll();
-
-      const bars = document.querySelectorAll(".bar-fill");
-      const animateBars = () => {
-        bars.forEach(bar => {
-          const barTop = bar.getBoundingClientRect().top;
-          if (barTop < window.innerHeight - 50) bar.style.width = bar.getAttribute("data-width");
-        });
-      };
-      window.addEventListener("scroll", animateBars);
-      animateBars();
-
-      const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-      let interval = null;
-      const target = document.getElementById("scramble-text");
-      const originalText = target.innerText;
-      setInterval(() => {
-        let iteration = 0;
-        clearInterval(interval);
-        interval = setInterval(() => {
-          target.innerText = target.innerText.split("").map((letter, index) => {
-            if (index < iteration) return originalText[index];
-            return letters[Math.floor(Math.random() * 36)];
-          }).join("");
-          if (iteration >= originalText.length) clearInterval(interval);
-          iteration += 1 / 3;
-        }, 30);
-      }, 6000);
-
-      let prevScrollpos = window.pageYOffset;
-      window.onscroll = function() {
-        let currentScrollPos = window.pageYOffset;
-        if (prevScrollpos > currentScrollPos) {
-          document.getElementById("navbar").style.transform = "translateY(0)";
-        } else {
-          document.getElementById("navbar").style.transform = "translateY(-100%)";
-        }
-        prevScrollpos = currentScrollPos;
-        revealOnScroll();
-        animateBars();
-      }
-    });
-  </script>
+  </div>
+</div>
+<div class="s">
+  <div class="slabel r">Global Deployment</div>
+  <table class="mtable r">
+    <thead><tr><th style="width:36px"></th><th>Market</th><th>Framework</th><th style="text-align:right">Monthly Access</th><th style="text-align:right">Status</th></tr></thead>
+    <tbody>
+      <tr><td class="mn">01</td><td class="mname">Zürich · Geneva · Basel</td><td class="mreg">nLPD · Swissmedic · FINMA</td><td class="mprice">CHF 11,000</td><td class="mst live">Launching</td></tr>
+      <tr><td class="mn">02</td><td class="mname">London · Harley Street</td><td class="mreg">ICO · GDPR · CQC</td><td class="mprice">GBP 13,500</td><td class="mst soon">Q3 2025</td></tr>
+      <tr><td class="mn">03</td><td class="mname">Dubai · Abu Dhabi</td><td class="mreg">DHA · HAAD · DoH</td><td class="mprice">USD 22,000</td><td class="mst soon">Q4 2025</td></tr>
+      <tr><td class="mn">04</td><td class="mname">Singapore</td><td class="mreg">MOH · PDPA · HSA</td><td class="mprice">USD 18,000</td><td class="mst soon">Q1 2026</td></tr>
+      <tr><td class="mn">05</td><td class="mname">Manhattan · New York</td><td class="mreg">HIPAA · NY SHIELD · ONC</td><td class="mprice">USD 20,000</td><td class="mst soon">2026</td></tr>
+    </tbody>
+  </table>
+</div>
+<div class="s">
+  <div class="slabel r">The Trajectory</div>
+  <div class="million-wrap r">
+    <div class="million-n">$1M</div>
+    <div class="million-l">Monthly Revenue Horizon</div>
+    <div class="million-s">50 active clients across five elite markets. 95% operating margin. 18–24 months from first client. Not ambition. Arithmetic.</div>
+  </div>
+</div>
+<div class="cta-wrap" id="signal">
+  <div class="cta-l r">
+    <div class="cta-price">CHF 970</div>
+    <div class="cta-plabel">Intelligence Signal · One Time</div>
+    <h2 class="cta-h">Request your<br><em>Signal Audit.</em></h2>
+    <p class="cta-d">In 72 hours, Medral delivers a complete intelligence signal on your clinic. Regulatory exposure quantified. Operational gap measured. Twelve signals the terminal would monitor permanently. Most directors who read it never operate without Medral again.</p>
+    <a href="YOUR_PAYPAL_OR_TYPEFORM_LINK_HERE" class="cta-btn">Request Signal →</a>
+  </div>
+  <div class="cta-r r">
+    <div class="cta-item"><div class="cta-dot"></div><div class="cta-t">Regulatory exposure — articles cited, fines quantified in CHF, timeline defined</div></div>
+    <div class="cta-item"><div class="cta-dot"></div><div class="cta-t">Capital hemorrhage — your operational gap vs. top-quartile peer clinics</div></div>
+    <div class="cta-item"><div class="cta-dot"></div><div class="cta-t">Competitive movement map — what your direct competitors did in the last 90 days</div></div>
+    <div class="cta-item"><div class="cta-dot"></div><div class="cta-t">12 live signals Medral would monitor for your clinic permanently</div></div>
+    <div class="cta-item"><div class="cta-dot"></div><div class="cta-t">Delivered in 72 hours. Encrypted. Proprietary format.</div></div>
+    <div class="cta-item" style="border-bottom:none"><div class="cta-dot"></div><div class="cta-t">No calls. No meetings. No proposals. Only signal.</div></div>
+  </div>
+</div>
+<footer>
+  <div class="flogo">Medral — Medical Intelligence Terminal</div>
+  <div class="fnote">Global · Private · Autonomous · Est. 2025</div>
+</footer>
+<script>
+document.addEventListener('mousemove',e=>{document.getElementById('cur').style.left=e.clientX+'px'});
+const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('v')})},{threshold:0.08});
+document.querySelectorAll('.r').forEach(r=>obs.observe(r));
+</script>
 </body>
 </html>
