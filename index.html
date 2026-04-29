@@ -3,279 +3,1113 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MED REAL | Private Intelligence Protocol</title>
+<title>MEDREAL | Private Intelligence Protocol</title>
+<meta name="description" content="Proprietary data intelligence protocol for elite private healthcare markets. Switzerland · UAE · United Kingdom.">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Geist+Mono:wght@300;400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=swap" rel="stylesheet">
 
+<!-- PAYPAL SDK -->
 <script src="https://www.paypal.com/sdk/js?client-id=BAA-IQrQ_WrHxJ_ezZLZIETUNCCWTwLr4qOXFJ_7aShFPO8kMCNOFmDdJkQD8PaIxfHJ-LbFn8ZGMvASKg&components=hosted-buttons&disable-funding=venmo&currency=USD"></script>
 
 <style>
-/* Reset y Estilos Base Extremos */
-*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; outline: none; }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
 :root {
-  --bg: #FFFFFF; /* Fondo Blanco Puro */
-  --fg: #000000; /* Texto Negro Absoluto */
-  --dim: #888888; /* Gris para datos técnicos */
-  --serif: 'Cormorant Garamond', serif; /* Para titulares de autoridad */
-  --mono: 'Geist Mono', monospace; /* Para datos y protocolo */
+  --black:        #020203;
+  --off-black:    #09090b;
+  --surface:      #0e0e11;
+  --surface-2:    #141417;
+  --border:       rgba(255,255,255,0.08);
+  --border-hi:    rgba(255,255,255,0.18);
+  --text-primary: #f4f0ea;
+  --text-second:  rgba(244,240,234,0.65);
+  --text-muted:   rgba(244,240,234,0.38);
+  --text-dim:     rgba(244,240,234,0.22);
+  --accent:       #c9b89b;
+  --accent-cold:  #8ab3cc;
+  --accent-warm:  #b8936a;
+  --green:        #4a9e6b;
+  --mono:         'Space Mono', monospace;
+  --serif:        'Cormorant Garamond', serif;
+  --grid:         rgba(255,255,255,0.03);
 }
+
+html { scroll-behavior: smooth; }
 
 body {
-  background-color: var(--bg);
-  color: var(--fg);
-  font-family: var(--serif);
-  -webkit-font-smoothing: antialiased;
+  background: var(--black);
+  color: var(--text-primary);
+  font-family: var(--mono);
+  min-height: 100vh;
   overflow-x: hidden;
-  line-height: 1.1;
+  cursor: crosshair;
 }
 
-/* Espaciado Masivo y Asimetría */
-.container {
-  width: 100%;
-  max-width: 1600px;
-  margin: 0 auto;
-  padding: 0 8vw; /* Márgenes laterales masivos */
-}
-
-/* Navegación como un terminal */
-nav {
-  padding: 5vh 8vw;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+/* GRID */
+body::before {
+  content: '';
   position: fixed;
-  top: 0;
-  width: 100%;
-  background: rgba(255,255,255,0.95);
-  z-index: 100;
-  border-bottom: 1px solid #f0f0f0;
+  inset: 0;
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 60px 60px;
+  pointer-events: none;
+  z-index: 0;
 }
 
-.logo {
-  font-family: var(--mono);
-  font-size: 11px;
-  letter-spacing: 0.4em;
-  text-transform: uppercase;
+/* SCANLINE */
+.scanline {
+  position: fixed;
+  top: -2px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent 0%, var(--accent-cold) 50%, transparent 100%);
+  opacity: 0.35;
+  animation: scan 10s linear infinite;
+  z-index: 1;
+  pointer-events: none;
 }
+@keyframes scan { from { top: -2px; } to { top: 100vh; } }
 
-.protocol-status {
+/* ─── NAV ─── */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 200;
   display: flex;
   align-items: center;
-  gap: 10px;
+  justify-content: space-between;
+  padding: 1.1rem 3rem;
+  border-bottom: 1px solid var(--border);
+  background: rgba(2,2,3,0.88);
+  backdrop-filter: blur(24px);
+}
+.nav-logo {
   font-family: var(--mono);
-  font-size: 10px;
-  color: var(--dim);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.35em;
+  color: var(--text-primary);
+}
+.nav-logo span { color: var(--accent); }
+.nav-status {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 9px;
+  letter-spacing: 0.25em;
+  color: var(--text-second);
+  text-transform: uppercase;
+}
+.pulse-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--green);
+  animation: pulse 2s ease-in-out infinite;
+}
+@keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.2;} }
+.nav-right {
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  color: var(--text-muted);
   text-transform: uppercase;
 }
 
-.dot {
-  width: 3px;
-  height: 3px;
-  background-color: #00FF00; /* Punto verde de "activo" */
-  border-radius: 50%;
+/* ─── TICKER ─── */
+.ticker-bar {
+  position: fixed;
+  top: 54px; left: 0; right: 0;
+  z-index: 199;
+  background: var(--surface-2);
+  border-bottom: 1px solid var(--border);
+  overflow: hidden;
+  padding: 0.5rem 0;
 }
+.ticker-inner {
+  display: flex;
+  gap: 5rem;
+  animation: ticker 28s linear infinite;
+  white-space: nowrap;
+}
+@keyframes ticker { from{transform:translateX(0);} to{transform:translateX(-50%);} }
+.t-item {
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  color: var(--text-second);
+  text-transform: uppercase;
+  flex-shrink: 0;
+}
+.t-item b { color: var(--accent-cold); font-weight: 400; margin-right: 0.4rem; }
 
-/* Hero Section: Solo tipografía de autoridad */
+/* ─── HERO ─── */
 .hero {
-  height: 90vh;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: flex-start;
-  padding-top: 15vh;
+  padding: 130px 3rem 5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 2;
 }
-
-.hero-id {
-  font-family: var(--mono);
-  font-size: 11px;
-  color: var(--dim);
-  margin-bottom: 3vh;
-}
-
-.hero-title {
-  font-size: clamp(3rem, 6vw, 6rem);
-  font-weight: 300;
-  letter-spacing: -0.04em;
-  max-width: 1100px;
-  line-height: 1.0;
-}
-
-/* Sección de Inteligencia: Layout de Dossier */
-.dossier-section {
-  padding: 15vh 0;
-  display: grid;
-  grid-template-columns: 2fr 1fr; /* Columna izquierda grande, derecha pequeña */
-  gap: 10vw;
-  align-items: start;
-}
-
-/* Lado Izquierdo: Descripción Técnica */
-.intel-description {
+.hero-badges {
   display: flex;
-  flex-direction: column;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 3.5rem;
 }
-
-.intel-header {
-  font-family: var(--mono);
-  font-size: 10px;
-  text-transform: uppercase;
-  color: var(--dim);
+.badge {
+  font-size: 9px;
   letter-spacing: 0.3em;
-  margin-bottom: 8vh;
-  border-bottom: 1px solid #eee;
-  padding-bottom: 1vh;
-  width: fit-content;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  border: 1px solid var(--border);
+  padding: 0.3rem 0.7rem;
 }
-
-.intel-text {
-  font-size: 1.6rem;
+.badge.live {
+  color: var(--accent-cold);
+  border-color: rgba(138,179,204,0.3);
+}
+.eyebrow {
+  font-size: 9px;
+  letter-spacing: 0.45em;
+  color: var(--accent);
+  text-transform: uppercase;
+  margin-bottom: 1.75rem;
+}
+.hero-title {
+  font-family: var(--serif);
+  font-size: clamp(3.8rem, 8.5vw, 7.5rem);
   font-weight: 300;
-  color: #333;
-  max-width: 700px;
-  line-height: 1.5;
-  margin-bottom: 5vh;
+  line-height: 0.92;
+  letter-spacing: -0.025em;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
 }
-
-.intel-data {
-  font-family: var(--mono);
-  font-size: 11px;
-  color: var(--dim);
-  line-height: 2.8;
-  list-style: none;
+.hero-title em { font-style: italic; color: var(--accent); }
+.hero-rule {
+  width: 1px; height: 55px;
+  background: linear-gradient(to bottom, var(--accent), transparent);
+  margin: 2.5rem 0;
 }
-
-.intel-data li::before {
-  content: "» ";
-  color: #000;
+.hero-statement {
+  font-family: var(--serif);
+  font-size: clamp(1.1rem, 2vw, 1.45rem);
+  font-weight: 300;
+  line-height: 1.75;
+  color: var(--text-second);
+  max-width: 580px;
+  margin-bottom: 3rem;
 }
+.hero-statement strong { color: var(--text-primary); font-weight: 400; }
 
-/* Lado Derecho: Adquisición y Pago */
-.acquisition-protocol {
-  display: flex;
-  flex-direction: column;
-  border: 1px solid #eee;
-  padding: 4vw;
-  margin-top: 10vh; /* Desfasado asimétricamente */
+/* TERMINAL */
+.terminal {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 1.75rem 2.25rem;
+  position: relative;
+  margin-top: 1.5rem;
+  max-width: 680px;
 }
-
-.protocol-id {
-  font-family: var(--mono);
-  font-size: 10px;
-  color: var(--dim);
-  margin-bottom: 2vh;
-}
-
-.fee-schedule {
-  margin-bottom: 5vh;
-}
-
-.fee-label {
-  font-size: 1.1rem;
-  font-weight: 400;
-  margin-bottom: 1vh;
+.terminal::before {
+  content: '> MEDREAL_PROTOCOL // SIGNAL_STREAM_ACTIVE // REV.2026.04';
   display: block;
+  font-size: 8px;
+  letter-spacing: 0.15em;
+  color: var(--accent-cold);
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border);
 }
-
-.fee-amount {
-  font-size: 3.5rem;
-  font-weight: 300;
-  letter-spacing: -0.05em;
-  line-height: 1;
+.t-line {
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: var(--text-second);
+  line-height: 2.1;
 }
-
-.fee-currency {
-  font-family: var(--mono);
-  font-size: 12px;
-  color: var(--dim);
-  margin-left: 10px;
+.t-line b { color: var(--accent); font-weight: 400; }
+.blink {
+  display: inline-block;
+  width: 7px; height: 12px;
+  background: var(--accent-cold);
+  margin-left: 3px;
+  animation: blink 1s step-end infinite;
+  vertical-align: middle;
 }
+@keyframes blink { 0%,100%{opacity:1;} 50%{opacity:0;} }
 
-/* Encapsulando PayPal en un contenedor discreto */
-.payment-module {
-  width: 100%;
-  max-width: 300px; /* Reduciendo el tamaño al extremo */
+/* CORNER MARKS */
+.cm { position: absolute; width: 10px; height: 10px; border-color: var(--border-hi); border-style: solid; }
+.cm.tl { top:10px; left:10px; border-width:1px 0 0 1px; }
+.cm.tr { top:10px; right:10px; border-width:1px 1px 0 0; }
+.cm.bl { bottom:10px; left:10px; border-width:0 0 1px 1px; }
+.cm.br { bottom:10px; right:10px; border-width:0 1px 1px 0; }
+
+/* ─── MARKET STRIP ─── */
+.market-wrap {
+  position: relative; z-index: 2;
+  padding: 0 3rem;
+  max-width: 1200px;
   margin: 0 auto;
 }
-
-/* Footer técnico */
-footer {
-  padding: 5vh 8vw;
-  border-top: 1px solid #eee;
+.market-strip {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 2px solid var(--accent);
+  padding: 1.75rem 2.5rem;
   display: flex;
-  justify-content: space-between;
-  font-family: var(--mono);
-  font-size: 10px;
+  align-items: center;
+  gap: 3rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.market-strip::-webkit-scrollbar { display: none; }
+.m-item { display: flex; flex-direction: column; gap: 0.35rem; white-space: nowrap; }
+.m-label {
+  font-size: 8px;
   letter-spacing: 0.3em;
-  color: var(--dim);
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+.m-value {
+  font-family: var(--serif);
+  font-size: 1.6rem;
+  font-weight: 400;
+  color: var(--text-primary);
+}
+.m-value sub {
+  font-size: 0.7rem;
+  color: var(--accent);
+  font-family: var(--mono);
+  margin-left: 0.2rem;
+}
+.m-div { width: 1px; height: 38px; background: var(--border-hi); flex-shrink: 0; }
+
+/* ─── SECTIONS ─── */
+section {
+  position: relative; z-index: 2;
+  padding: 5.5rem 3rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.sec-header {
+  display: flex;
+  align-items: baseline;
+  gap: 1.25rem;
+  margin-bottom: 3.5rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid var(--border);
+}
+.sec-num { font-size: 9px; letter-spacing: 0.3em; color: var(--text-muted); }
+.sec-title {
+  font-family: var(--serif);
+  font-size: 1.9rem;
+  font-weight: 300;
+  color: var(--text-primary);
+}
+.sec-tag {
+  margin-left: auto;
+  font-size: 9px;
+  letter-spacing: 0.25em;
+  color: var(--text-muted);
   text-transform: uppercase;
 }
 
-/* Ajustes Móviles */
-@media (max-width: 1000px) {
-  .dossier-section {
-    grid-template-columns: 1fr;
-    gap: 10vh;
-  }
-  .acquisition-protocol {
-    margin-top: 0;
-    padding: 8vw;
-  }
+.full-rule {
+  position: relative; z-index: 2;
+  width: 100%;
+  height: 1px;
+  background: var(--border);
+}
+
+/* ─── SIGNAL GRID ─── */
+.sig-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  margin-bottom: 2.5rem;
+}
+.sig-cell {
+  background: var(--off-black);
+  padding: 2.5rem 2rem;
+  position: relative;
+  overflow: hidden;
+  transition: background 0.3s;
+}
+.sig-cell:hover { background: var(--surface); }
+.sig-cell::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent-cold), transparent);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.sig-cell:hover::after { opacity: 1; }
+.sig-idx {
+  font-size: 8px;
+  letter-spacing: 0.3em;
+  color: var(--text-muted);
+  display: block;
+  margin-bottom: 1.5rem;
+  text-transform: uppercase;
+}
+.sig-name {
+  font-family: var(--serif);
+  font-size: 1.3rem;
+  font-weight: 400;
+  color: var(--text-primary);
+  margin-bottom: 0.75rem;
+}
+.sig-desc {
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  color: var(--text-second);
+  line-height: 1.9;
+}
+.sig-tier {
+  position: absolute;
+  bottom: 1.5rem; right: 1.5rem;
+  font-size: 8px;
+  letter-spacing: 0.3em;
+  color: var(--accent-cold);
+  border: 1px solid rgba(138,179,204,0.25);
+  padding: 0.2rem 0.5rem;
+  text-transform: uppercase;
+}
+
+/* ─── PIPELINE ─── */
+.pipeline {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+}
+.pipe-left {
+  background: var(--off-black);
+  padding: 3rem 2.5rem;
+}
+.pipe-right {
+  background: var(--surface);
+  padding: 3rem 2.5rem;
+}
+.pipe-label {
+  font-size: 9px;
+  letter-spacing: 0.35em;
+  color: var(--accent);
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 1.5rem;
+}
+.pipe-heading {
+  font-family: var(--serif);
+  font-size: 2.2rem;
+  font-weight: 300;
+  line-height: 1.2;
+  color: var(--text-primary);
+  margin-bottom: 1.5rem;
+}
+.pipe-body {
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  color: var(--text-second);
+  line-height: 2.1;
+  max-width: 280px;
+}
+.flow-step {
+  display: flex;
+  gap: 1.5rem;
+  padding: 1.5rem 0;
+  border-bottom: 1px solid var(--border);
+}
+.flow-step:last-child { border-bottom: none; }
+.step-n {
+  font-size: 8px;
+  letter-spacing: 0.2em;
+  color: var(--text-muted);
+  padding-top: 0.15rem;
+  min-width: 2rem;
+}
+.step-title {
+  font-family: var(--serif);
+  font-size: 1rem;
+  color: var(--text-primary);
+  margin-bottom: 0.4rem;
+}
+.step-detail {
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  color: var(--text-second);
+  line-height: 1.9;
+}
+.step-tag {
+  display: inline-block;
+  margin-top: 0.5rem;
+  font-size: 8px;
+  letter-spacing: 0.2em;
+  padding: 0.15rem 0.5rem;
+  border: 1px solid rgba(138,179,204,0.22);
+  color: var(--accent-cold);
+  text-transform: uppercase;
+}
+
+/* ─── DOSSIER ─── */
+.dossier-block {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+}
+.doss-left {
+  background: var(--off-black);
+  padding: 4rem 3rem;
+  position: relative;
+}
+.doss-right {
+  background: var(--surface-2);
+  padding: 4rem 3rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.doss-label {
+  font-size: 9px;
+  letter-spacing: 0.35em;
+  color: var(--accent);
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 2rem;
+}
+.doss-heading {
+  font-family: var(--serif);
+  font-size: 2rem;
+  font-weight: 300;
+  line-height: 1.3;
+  color: var(--text-primary);
+  margin-bottom: 1.5rem;
+}
+.doss-body {
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  color: var(--text-second);
+  line-height: 2.2;
+  margin-bottom: 2rem;
+}
+.spec-table { width: 100%; border-collapse: collapse; }
+.spec-table tr { border-bottom: 1px solid var(--border); }
+.spec-table tr:last-child { border-bottom: none; }
+.spec-table td {
+  padding: 0.8rem 0;
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  vertical-align: top;
+}
+.spec-table td:first-child {
+  color: var(--text-muted);
+  width: 40%;
+  text-transform: uppercase;
+}
+.spec-table td:last-child { color: var(--text-second); }
+
+/* PRICE */
+.price-block { margin-bottom: 2.5rem; }
+.price-currency {
+  font-size: 9px;
+  letter-spacing: 0.3em;
+  color: var(--text-muted);
+  display: block;
+  margin-bottom: 0.4rem;
+  text-transform: uppercase;
+}
+.price-num {
+  font-family: var(--serif);
+  font-size: 4.5rem;
+  font-weight: 300;
+  color: var(--text-primary);
+  line-height: 1;
+}
+.price-note {
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  color: var(--text-muted);
+  margin-top: 0.75rem;
+  text-transform: uppercase;
+}
+.deliverables { list-style: none; margin-bottom: 2.5rem; display: flex; flex-direction: column; gap: 0.65rem; }
+.deliverables li {
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  color: var(--text-second);
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  line-height: 1.65;
+}
+.deliverables li::before { content: '→'; color: var(--accent); flex-shrink: 0; }
+
+/* PAYPAL WRAPPER */
+.paypal-wrapper {
+  background: var(--surface);
+  border: 1px solid var(--border-hi);
+  padding: 1.5rem;
+  margin-bottom: 0.75rem;
+  position: relative;
+}
+.paypal-wrapper::before {
+  content: 'PROTOCOL ACQUISITION // SECURE PAYMENT';
+  display: block;
+  font-size: 8px;
+  letter-spacing: 0.3em;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--border);
+}
+#paypal-container-7UGCKEL7MPD2W { min-height: 48px; }
+.sec-strip {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  font-size: 8px;
+  letter-spacing: 0.2em;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+/* ─── TARGET SECTION ─── */
+.target-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+}
+.target-card {
+  background: var(--off-black);
+  padding: 2.5rem 1.75rem;
+  transition: background 0.3s;
+  position: relative;
+}
+.target-card:hover { background: var(--surface); }
+.target-n {
+  font-size: 8px;
+  letter-spacing: 0.3em;
+  color: var(--text-muted);
+  margin-bottom: 1.5rem;
+  display: block;
+}
+.target-title {
+  font-family: var(--serif);
+  font-size: 1.1rem;
+  font-weight: 400;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+  line-height: 1.3;
+}
+.target-sub {
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  color: var(--text-second);
+  line-height: 1.9;
+}
+.juris-row {
+  display: flex;
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  margin-top: 1px;
+}
+.juris-item {
+  flex: 1;
+  background: var(--surface);
+  padding: 1.5rem 2rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.juris-code {
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  color: var(--accent);
+  font-weight: 700;
+}
+.juris-name {
+  font-size: 9px;
+  letter-spacing: 0.15em;
+  color: var(--text-second);
+  text-transform: uppercase;
+}
+
+/* ─── REVENUE SECTION ─── */
+.rev-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+}
+.rev-cell {
+  background: var(--off-black);
+  padding: 2.5rem 2rem;
+  position: relative;
+}
+.rev-cell.highlight { background: var(--surface); border-top: 1px solid var(--accent); }
+.rev-vol {
+  font-size: 9px;
+  letter-spacing: 0.25em;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 1rem;
+}
+.rev-num {
+  font-family: var(--serif);
+  font-size: 2.5rem;
+  font-weight: 300;
+  color: var(--text-primary);
+  margin-bottom: 0.35rem;
+  line-height: 1;
+}
+.rev-sub {
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  color: var(--text-second);
+}
+.rev-note {
+  position: absolute;
+  bottom: 1.5rem; right: 1.5rem;
+  font-size: 8px;
+  letter-spacing: 0.25em;
+  color: var(--accent);
+  text-transform: uppercase;
+}
+
+/* ─── FOOTER ─── */
+footer {
+  position: relative; z-index: 2;
+  border-top: 1px solid var(--border);
+  padding: 3rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+.footer-quote {
+  font-family: var(--serif);
+  font-size: 0.9rem;
+  font-style: italic;
+  color: var(--text-muted);
+}
+.footer-right {
+  font-size: 8px;
+  letter-spacing: 0.25em;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  text-align: right;
+  line-height: 2;
+}
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 900px) {
+  nav, footer { padding-left: 1.5rem; padding-right: 1.5rem; }
+  section, .market-wrap, .hero { padding-left: 1.5rem; padding-right: 1.5rem; }
+  .hero-title { font-size: 3rem; }
+  .sig-grid { grid-template-columns: 1fr; }
+  .pipeline { grid-template-columns: 1fr; }
+  .dossier-block { grid-template-columns: 1fr; }
+  .target-grid { grid-template-columns: 1fr 1fr; }
+  .rev-grid { grid-template-columns: 1fr; }
+  .juris-row { flex-direction: column; }
+  .market-strip { gap: 2rem; padding: 1.5rem; }
+}
+@media (max-width: 600px) {
+  .target-grid { grid-template-columns: 1fr; }
+  .hero-title { font-size: 2.5rem; }
+  .doss-left, .doss-right { padding: 2rem 1.5rem; }
 }
 </style>
 </head>
 <body>
 
+<div class="scanline"></div>
+
+<!-- NAV -->
 <nav>
-  <div class="logo">Med Real</div>
-  <div class="protocol-status">
-    <div class="dot"></div>
+  <div class="nav-logo">MED<span>REAL</span></div>
+  <div class="nav-status">
+    <div class="pulse-dot"></div>
     Intelligence Stream: Active
   </div>
+  <div class="nav-right">PRVT_DATA_INTEL // REV.2026</div>
 </nav>
 
-<div class="container">
-  <section class="hero">
-    <div class="hero-id">PRVT_DATA_INTEL // REV. 2026</div>
-    <h1 class="hero-title">Access to opaque private healthcare markets through proprietary data extraction.</h1>
-  </section>
-
-  <section class="dossier-section">
-    <div class="intel-description">
-      <div class="intel-header">01 // Signal Audit Dossier</div>
-      <p class="intel-text">A surgical analysis of a single private medical entity. We convert invisible signals—competitive positioning, regulatory risk, and expansion patterns—into structured, actionable intelligence.</p>
-      <ul class="intel-data">
-        <li>Entity Risk Profile Assessment</li>
-        <li>Capital Equipment Procurement Tracking</li>
-        <li>Jurisdictional Mapping (Switzerland | UAE | UK)</li>
-        <li>Delivered via Encrypted Dossier within 48h</li>
-      </ul>
-    </div>
-
-    <div class="acquisition-protocol">
-      <div class="protocol-id">PROTOCOL_ACQUISITION_SEQ</div>
-      
-      <div class="fee-schedule">
-        <span class="fee-label">Dossier Acquisition Fee</span>
-        <div class="fee-amount">970<span class="fee-currency">USD</span></div>
-      </div>
-      
-      <div class="payment-module">
-        <div id="paypal-container-7UGCKEL7MPD2W"></div>
-        <script>
-          paypal.HostedButtons({
-            hostedButtonId: "7UGCKEL7MPD2W",
-          }).render("#paypal-container-7UGCKEL7MPD2W")
-        </script>
-      </div>
-    </div>
-  </section>
+<!-- TICKER -->
+<div class="ticker-bar">
+  <div class="ticker-inner">
+    <span class="t-item"><b>CH</b>Zurich Private Cluster — Capital Signal Detected</span>
+    <span class="t-item"><b>AE</b>Dubai Health City — Equipment Procurement Level 3</span>
+    <span class="t-item"><b>UK</b>London — Elite Specialist Migration Flagged</span>
+    <span class="t-item"><b>SIG</b>Regulatory Shift // UAE Ministry of Health</span>
+    <span class="t-item"><b>CAP</b>Robotic Surgery Acquisition // Geneva Cluster</span>
+    <span class="t-item"><b>CH</b>Zurich Private Cluster — Capital Signal Detected</span>
+    <span class="t-item"><b>AE</b>Dubai Health City — Equipment Procurement Level 3</span>
+    <span class="t-item"><b>UK</b>London — Elite Specialist Migration Flagged</span>
+    <span class="t-item"><b>SIG</b>Regulatory Shift // UAE Ministry of Health</span>
+    <span class="t-item"><b>CAP</b>Robotic Surgery Acquisition // Geneva Cluster</span>
+  </div>
 </div>
 
+<main>
+
+<!-- ─── HERO ─── -->
+<div class="hero">
+  <div class="hero-badges">
+    <span class="badge live">Protocol: Online</span>
+    <span class="badge">Jurisdiction: CH / AE / UK</span>
+    <span class="badge">Clearance: Restricted</span>
+    <span class="badge">Encryption: 256-bit</span>
+  </div>
+
+  <div class="eyebrow">Private Healthcare Intelligence Protocol</div>
+
+  <h1 class="hero-title">
+    The Market<br>
+    Doesn't<br>
+    <em>Hide.</em><br>
+    It Whispers.
+  </h1>
+
+  <div class="hero-rule"></div>
+
+  <p class="hero-statement">
+    Elite private healthcare operates under <strong>deliberate information asymmetry.</strong>
+    Institutional directors, investment funds, and surgical specialists navigate
+    without signal. MEDREAL converts market opacity into <strong>executable intelligence.</strong>
+  </p>
+
+  <div class="terminal">
+    <div class="cm tl"></div><div class="cm br"></div>
+    <p class="t-line">PIPELINE_STATUS: <b>Extraction Active</b></p>
+    <p class="t-line">SIGNAL_LAYERS: <b>Capital // Regulatory // Talent</b></p>
+    <p class="t-line">MARKETS: <b>Switzerland | United Arab Emirates | United Kingdom</b></p>
+    <p class="t-line">PRODUCT: <b>Signal Audit Dossier — CHF/USD 970 per entity</b></p>
+    <p class="t-line">DELIVERY: <b>Encrypted // 48 hours from initiation</b><span class="blink"></span></p>
+  </div>
+</div>
+
+<!-- ─── MARKET STRIP ─── -->
+<div class="market-wrap">
+  <div class="market-strip">
+    <div class="m-item">
+      <span class="m-label">Addressable Market</span>
+      <span class="m-value">$11.9T<sub>↑</sub></span>
+    </div>
+    <div class="m-div"></div>
+    <div class="m-item">
+      <span class="m-label">Market Opacity</span>
+      <span class="m-value">94.2%</span>
+    </div>
+    <div class="m-div"></div>
+    <div class="m-item">
+      <span class="m-label">Active Jurisdictions</span>
+      <span class="m-value">3</span>
+    </div>
+    <div class="m-div"></div>
+    <div class="m-item">
+      <span class="m-label">Dossier Delivery</span>
+      <span class="m-value">48h</span>
+    </div>
+    <div class="m-div"></div>
+    <div class="m-item">
+      <span class="m-label">Signal Tiers</span>
+      <span class="m-value">3<sub>Active</sub></span>
+    </div>
+    <div class="m-div"></div>
+    <div class="m-item">
+      <span class="m-label">Entry Protocol</span>
+      <span class="m-value">USD 970</span>
+    </div>
+  </div>
+</div>
+
+<div class="full-rule"></div>
+
+<!-- ─── SIGNAL EXTRACTION ─── -->
+<section>
+  <div class="sec-header">
+    <span class="sec-num">01 //</span>
+    <h2 class="sec-title">Signal Extraction Architecture</h2>
+    <span class="sec-tag">Layer-0 Pipeline</span>
+  </div>
+
+  <div class="sig-grid">
+    <div class="sig-cell">
+      <span class="sig-idx">SIG_01 // Capital</span>
+      <p class="sig-name">Capital Procurement Signals</p>
+      <p class="sig-desc">High-value surgical equipment acquisition patterns. Da Vinci acquisition cycles, imaging infrastructure spend, and operating theatre capacity expansion — converted into market positioning intelligence before public disclosure.</p>
+      <span class="sig-tier">Tier I</span>
+    </div>
+    <div class="sig-cell">
+      <span class="sig-idx">SIG_02 // Regulatory</span>
+      <p class="sig-name">Regulatory &amp; Legal Movement</p>
+      <p class="sig-desc">Jurisdictional filings, license applications, and corporate structure modifications. Regulatory shifts surface 6–18 months before market impact. MEDREAL reads them at origin — before the legal community processes the implication.</p>
+      <span class="sig-tier">Tier I</span>
+    </div>
+    <div class="sig-cell">
+      <span class="sig-idx">SIG_03 // Talent</span>
+      <p class="sig-name">Specialist Talent Migration</p>
+      <p class="sig-desc">Elite specialist movement between private institutions encodes institutional strategy before any public announcement. Neurosurgeon departures, department restructuring, and directorial appointments are leading indicators — not trailing data.</p>
+      <span class="sig-tier">Tier I</span>
+    </div>
+  </div>
+
+  <div class="terminal" style="margin-top:2.5rem;">
+    <div class="cm tl"></div><div class="cm br"></div>
+    <p class="t-line">THESIS: <b>Information asymmetry is not a flaw in the market. It is the market.</b></p>
+    <p class="t-line">EDGE: Those who read the signal before consensus capture the position.</p>
+    <p class="t-line">ARCHITECTURE: Proprietary extraction pipeline — not a database. Not a news feed.<span class="blink"></span></p>
+  </div>
+</section>
+
+<div class="full-rule"></div>
+
+<!-- ─── PIPELINE ─── -->
+<section>
+  <div class="sec-header">
+    <span class="sec-num">02 //</span>
+    <h2 class="sec-title">Intelligence Pipeline</h2>
+    <span class="sec-tag">Operational Protocol</span>
+  </div>
+
+  <div class="pipeline">
+    <div class="pipe-left">
+      <span class="pipe-label">Core Mechanism</span>
+      <h3 class="pipe-heading">From Noise<br>to Dossier.</h3>
+      <p class="pipe-body">The pipeline ingests unstructured signals from legal registries, procurement databases, and specialist networks across three sovereign jurisdictions. Each input is weighted, cross-referenced, and distilled into a structured intelligence asset with decision-grade clarity.</p>
+    </div>
+    <div class="pipe-right">
+      <div class="flow-step">
+        <span class="step-n">P_01</span>
+        <div>
+          <p class="step-title">Signal Ingestion</p>
+          <p class="step-detail">Continuous extraction from public registries, regulatory filings, and proprietary specialist networks across CH, AE, and UK jurisdictions.</p>
+          <span class="step-tag">Automated // Continuous</span>
+        </div>
+      </div>
+      <div class="flow-step">
+        <span class="step-n">P_02</span>
+        <div>
+          <p class="step-title">Cross-Jurisdictional Mapping</p>
+          <p class="step-detail">Signals are mapped against institutional baseline profiles. Anomalies — deviations from established behavioral patterns — are flagged for escalation and weighted by materiality.</p>
+          <span class="step-tag">Proprietary Model</span>
+        </div>
+      </div>
+      <div class="flow-step">
+        <span class="step-n">P_03</span>
+        <div>
+          <p class="step-title">Entity Risk Assessment</p>
+          <p class="step-detail">Target institution is profiled across four vectors: competitive position, regulatory exposure, capital trajectory, and talent stability index.</p>
+          <span class="step-tag">Structured Output</span>
+        </div>
+      </div>
+      <div class="flow-step">
+        <span class="step-n">P_04</span>
+        <div>
+          <p class="step-title">Dossier Compilation &amp; Delivery</p>
+          <p class="step-detail">Findings compiled into an encrypted Signal Audit Dossier. Delivered within 48 hours of protocol initiation via secure channel.</p>
+          <span class="step-tag">Encrypted // 48h</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="full-rule"></div>
+
+<!-- ─── DOSSIER / PRODUCT + PAYPAL ─── -->
+<section>
+  <div class="sec-header">
+    <span class="sec-num">03 //</span>
+    <h2 class="sec-title">The Signal Audit Dossier</h2>
+    <span class="sec-tag">Acquisition Protocol</span>
+  </div>
+
+  <div class="dossier-block">
+    <div class="doss-left">
+      <div class="cm tl"></div>
+      <span class="doss-label">Product Brief</span>
+      <h3 class="doss-heading">A surgical analysis of a single private medical entity.</h3>
+      <p class="doss-body">
+        This is not a market report. It is not a news digest or a consultant's slide deck. The Signal Audit Dossier is the document a neurosurgeon, a venture capital director, or an M&A attorney requires to validate an acquisition target, identify a regulatory risk before the competition processes it, or detect an emerging monopoly in a private healthcare cluster before the window closes.
+      </p>
+      <table class="spec-table">
+        <tr><td>Entity Scope</td><td>Single institution per dossier</td></tr>
+        <tr><td>Jurisdictions</td><td>Switzerland · UAE · United Kingdom</td></tr>
+        <tr><td>Signal Sources</td><td>Capital / Regulatory / Talent</td></tr>
+        <tr><td>Delivery Format</td><td>Encrypted dossier document</td></tr>
+        <tr><td>Turnaround</td><td>48 hours from initiation</td></tr>
+        <tr><td>Use Cases</td><td>M&A validation · Risk detection · Entry positioning</td></tr>
+      </table>
+    </div>
+
+    <div class="doss-right">
+      <div>
+        <div class="price-block">
+          <span class="price-currency">CHF / USD</span>
+          <div class="price-num">970</div>
+          <p class="price-note">Per dossier · Single entity · Full signal audit</p>
+        </div>
+
+        <ul class="deliverables">
+          <li>Entity Risk Profile — competitive positioning and institutional stability assessment</li>
+          <li>Capital Equipment Procurement Tracking — spending trajectory and capacity signals</li>
+          <li>Jurisdictional Regulatory Map — active filings and risk surface across target market</li>
+          <li>Specialist Talent Index — key personnel stability and migration intelligence</li>
+          <li>Market Position Assessment — monopoly detection and competitive threat mapping</li>
+          <li>Actionable Summary — executive-level findings with decision-grade clarity</li>
+        </ul>
+      </div>
+
+      <div>
+        <!-- PAYPAL INTEGRATION -->
+        <div class="paypal-wrapper">
+          <div id="paypal-container-7UGCKEL7MPD2W"></div>
+        </div>
+        <div class="sec-strip">
+          <span>256-bit Encrypted</span>
+          <span>//</span>
+          <span>Secure Checkout</span>
+          <span>//</span>
+          <span>Confidential Delivery</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="full-rule"></div>
+
+<!-- ─── REVENUE MODEL ─── -->
+<section>
+  <div class="sec-header">
+    <span class="sec-num">04 //</span>
+    <h2 class="sec-title">Revenue Architecture</h2>
+    <span class="sec-tag">Protocol Scalability</span>
+  </div>
+
+  <div class="rev-grid">
+    <div class="rev-cell">
+      <span class="rev-vol">10 Dossiers / Month</span>
+      <div class="rev-num">$9,700</div>
+      <p class="rev-sub">Entry-level protocol operation. Solo principal. Minimal infrastructure.</p>
+    </div>
+    <div class="rev-cell highlight">
+      <span class="rev-vol">50 Dossiers / Month</span>
+      <div class="rev-num">$48,500</div>
+      <p class="rev-sub">Scaled operation with institutional client base and partial automation.</p>
+      <span class="rev-note">Target Threshold</span>
+    </div>
+    <div class="rev-cell">
+      <span class="rev-vol">Institutional Subscription</span>
+      <div class="rev-num">$15K+</div>
+      <p class="rev-sub">Monthly retainer for continuous signal access. VC funds, law firms, Big Pharma.</p>
+    </div>
+  </div>
+
+  <div class="terminal" style="margin-top:2.5rem;">
+    <div class="cm tl"></div><div class="cm br"></div>
+    <p class="t-line">CEILING: <b>Institutional subscriptions + dossier volume = eight-figure annual ARR potential.</b></p>
+    <p class="t-line">MOAT: Proprietary extraction pipeline cannot be replicated by a research team or a database subscription.</p>
+    <p class="t-line">DEPENDENCY_INVERSION: <b>The market depends on MEDREAL. MEDREAL does not depend on the market.</b><span class="blink"></span></p>
+  </div>
+</section>
+
+<div class="full-rule"></div>
+
+<!-- ─── TARGET PRINCIPALS ─── -->
+<section>
+  <div class="sec-header">
+    <span class="sec-num">05 //</span>
+    <h2 class="sec-title">Authorized Access Profiles</h2>
+    <span class="sec-tag">Target Principals</span>
+  </div>
+
+  <div class="target-grid">
+    <div class="target-card">
+      <span class="target-n">A_01</span>
+      <p class="target-title">Neurosurgeons &amp; Elite Specialists</p>
+      <p class="target-sub">Institutional intelligence for market entry, practice expansion, or competitive positioning within private healthcare clusters in three jurisdictions.</p>
+    </div>
+    <div class="target-card">
+      <span class="target-n">A_02</span>
+      <p class="target-title">International Law Firms</p>
+      <p class="target-sub">Pre-acquisition due diligence. Regulatory risk identification before deal execution. Jurisdictional exposure mapping for cross-border transactions.</p>
+    </div>
+    <div class="target-card">
+      <span class="target-n">A_03</span>
+      <p class="target-title">Big Pharma Strategy Directors</p>
+      <p class="target-sub">Distribution channel intelligence. Institutional partnership assessment. Market entry signal detection across private healthcare networks.</p>
+    </div>
+    <div class="target-card">
+      <span class="target-n">A_04</span>
+      <p class="target-title">HealthTech Venture Capital</p>
+      <p class="target-sub">Pre-investment validation of acquisition targets. Competitive moat assessment. Regulatory risk surface analysis prior to capital deployment.</p>
+    </div>
+  </div>
+
+  <div class="juris-row">
+    <div class="juris-item">
+      <span class="juris-code">CH</span>
+      <span class="juris-name">Confederation of Switzerland — Geneva / Zurich Private Clusters</span>
+    </div>
+    <div class="juris-item">
+      <span class="juris-code">AE</span>
+      <span class="juris-name">United Arab Emirates — Dubai / Abu Dhabi Health Districts</span>
+    </div>
+    <div class="juris-item">
+      <span class="juris-code">UK</span>
+      <span class="juris-name">United Kingdom — London Private Healthcare Corridor</span>
+    </div>
+  </div>
+</section>
+
+<!-- ─── FOOTER ─── -->
 <footer>
-  <div>© 2026 Med Real // Confidential</div>
-  <div>256-bit Encryption</div>
+  <p class="footer-quote">"Precision is not an aesthetic. It is a competitive advantage."</p>
+  <div class="footer-right">
+    <span style="display:block;">© 2026 MEDREAL</span>
+    <span style="display:block;">Private Intelligence Protocol</span>
+    <span style="display:block;">All rights reserved // Confidential</span>
+  </div>
 </footer>
+
+</main>
+
+<!-- PAYPAL RENDER -->
+<script>
+  window.addEventListener('load', function() {
+    if (typeof paypal !== 'undefined') {
+      paypal.HostedButtons({
+        hostedButtonId: "7UGCKEL7MPD2W",
+      }).render("#paypal-container-7UGCKEL7MPD2W");
+    }
+  });
+</script>
 
 </body>
 </html>
