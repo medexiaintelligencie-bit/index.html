@@ -3,1019 +3,262 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MEDRAL — Private Market Intelligence</title>
+<title>MED REAL | Private Medical Intelligence</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=IBM+Plex+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@300;400;500&family=Inter:wght@300;400&display=swap" rel="stylesheet">
+
+<script src="https://www.paypal.com/sdk/js?client-id=BAA-IQrQ_WrHxJ_ezZLZIETUNCCWTwLr4qOXFJ_7aShFPO8kMCNOFmDdJkQD8PaIxfHJ-LbFn8ZGMvASKg&components=hosted-buttons&disable-funding=venmo&currency=USD"></script>
+
 <style>
-  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+/* Reset y variables extremas */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --bg: #000000;
+  --fg: #FFFFFF;
+  --dim: #777777;
+  --mono: 'Geist Mono', monospace;
+  --sans: 'Inter', sans-serif;
+}
 
-  :root {
-    --black: #000000;
-    --white: #FFFFFF;
-    --serif: 'EB Garamond', Georgia, serif;
-    --mono: 'IBM Plex Mono', 'Courier New', monospace;
-  }
+body {
+  background-color: var(--bg);
+  color: var(--fg);
+  font-family: var(--sans);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
 
-  html { scroll-behavior: smooth; }
+/* Espaciado masivo para proyectar "caro" */
+.container {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 5vw;
+}
 
-  body {
-    background: var(--black);
-    color: var(--white);
-    font-family: var(--mono);
-    cursor: none;
-    overflow-x: hidden;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
+/* Navegación ultra minimalista */
+nav {
+  padding: 4vh 5vw;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  background: var(--bg);
+  z-index: 100;
+}
 
-  /* CURSOR */
-  #cursor {
-    position: fixed;
-    width: 8px;
-    height: 8px;
-    background: var(--white);
-    border-radius: 50%;
-    pointer-events: none;
-    z-index: 9999;
-    transform: translate(-50%, -50%);
-    transition: transform 0.08s ease, width 0.2s ease, height 0.2s ease;
-    mix-blend-mode: difference;
-  }
-  #cursor.expanded {
-    width: 40px;
-    height: 40px;
-  }
+.logo {
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--fg);
+}
 
-  /* FADE-UP ANIMATION */
-  .fade-up {
-    opacity: 0;
-    transform: translateY(28px);
-    transition: opacity 0.8s cubic-bezier(0.16,1,0.3,1), transform 0.8s cubic-bezier(0.16,1,0.3,1);
-  }
-  .fade-up.visible {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.status-indicator {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  color: var(--dim);
+  text-transform: uppercase;
+}
 
-  /* LAYOUT */
-  .container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 40px;
-  }
+.dot {
+  width: 4px;
+  height: 4px;
+  background-color: var(--fg);
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
 
-  /* NAV */
-  nav {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 100;
-    border-bottom: 1px solid var(--white);
-    background: var(--black);
-  }
-  .nav-inner {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    height: 52px;
-    padding: 0 40px;
-    max-width: 100%;
-  }
-  .nav-logo {
-    font-family: var(--mono);
-    font-size: 11px;
-    font-weight: 500;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
-  }
-  .nav-status {
-    display: flex;
-    align-items: center;
-    gap: 24px;
-    font-size: 10px;
-    letter-spacing: 0.12em;
-    color: var(--white);
-    opacity: 0.5;
-  }
-  .nav-status .live-dot {
-    display: inline-block;
-    width: 6px;
-    height: 6px;
-    background: var(--white);
-    border-radius: 50%;
-    animation: pulse 2s infinite;
-    opacity: 1;
-  }
-  @keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.2; }
-  }
-  .nav-cta {
-    font-family: var(--mono);
-    font-size: 10px;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--black);
-    background: var(--white);
-    border: none;
-    padding: 8px 20px;
-    cursor: none;
-    transition: opacity 0.2s;
-  }
-  .nav-cta:hover { opacity: 0.8; }
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.2; }
+}
 
-  /* HERO */
-  #hero {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    padding-top: 52px;
-    border-bottom: 1px solid var(--white);
-  }
-  .hero-top-bar {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    padding: 48px 40px 0;
-    border-bottom: 1px solid rgba(255,255,255,0.15);
-    padding-bottom: 24px;
-  }
-  .hero-label {
-    font-size: 10px;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    opacity: 0.4;
-  }
-  .hero-metric {
-    text-align: right;
-  }
-  .hero-metric-number {
-    font-family: var(--mono);
-    font-size: 11px;
-    letter-spacing: 0.08em;
-  }
-  .hero-metric-label {
-    font-size: 9px;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    opacity: 0.35;
-    margin-top: 2px;
-  }
-  .hero-headline-block {
-    padding: 60px 40px 80px;
-  }
-  .hero-headline {
-    font-family: var(--serif);
-    font-size: clamp(52px, 7.5vw, 110px);
-    font-weight: 400;
-    line-height: 0.95;
-    letter-spacing: -0.01em;
-    max-width: 900px;
-  }
-  .hero-headline em {
-    font-style: italic;
-    opacity: 0.45;
-  }
-  .hero-sub {
-    margin-top: 48px;
-    display: flex;
-    align-items: flex-start;
-    gap: 60px;
-  }
-  .hero-descriptor {
-    font-size: 11px;
-    letter-spacing: 0.12em;
-    line-height: 1.9;
-    opacity: 0.5;
-    max-width: 340px;
-  }
-  .hero-live-feed {
-    border: 1px solid rgba(255,255,255,0.2);
-    padding: 20px 24px;
-    min-width: 260px;
-  }
-  .hero-live-feed-header {
-    font-size: 9px;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    opacity: 0.35;
-    margin-bottom: 16px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .feed-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 11px;
-    padding: 6px 0;
-    border-top: 1px solid rgba(255,255,255,0.08);
-  }
-  .feed-row:first-of-type { border-top: none; }
-  .feed-val {
-    font-weight: 500;
-    letter-spacing: 0.06em;
-  }
-  .feed-key { opacity: 0.4; }
+/* Hero Section con espacio abismal */
+.hero {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+}
 
-  /* SECTION HEADERS */
-  .section-index {
-    font-size: 9px;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
-    opacity: 0.3;
-    display: block;
-    margin-bottom: 40px;
-  }
+.hero-tag {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.4em;
+  color: var(--dim);
+  text-transform: uppercase;
+  margin-bottom: 4vh;
+}
 
-  /* MANIFESTO */
-  #manifesto {
-    padding: 120px 40px;
-    border-bottom: 1px solid var(--white);
-    display: grid;
-    grid-template-columns: 1fr 2fr;
-    gap: 80px;
-    align-items: start;
-  }
-  .manifesto-left {
-    position: sticky;
-    top: 80px;
-  }
-  .manifesto-title {
-    font-family: var(--mono);
-    font-size: 9px;
-    letter-spacing: 0.24em;
-    text-transform: uppercase;
-    opacity: 0.3;
-    margin-bottom: 16px;
-  }
-  .manifesto-heading {
-    font-family: var(--serif);
-    font-size: 32px;
-    font-weight: 400;
-    line-height: 1.2;
-  }
-  .manifesto-body {
-    padding-top: 8px;
-  }
-  .manifesto-paragraph {
-    font-family: var(--serif);
-    font-size: clamp(20px, 2.2vw, 28px);
-    font-weight: 400;
-    line-height: 1.55;
-    margin-bottom: 36px;
-    opacity: 0.85;
-  }
-  .manifesto-paragraph:last-child { margin-bottom: 0; }
-  .manifesto-paragraph strong {
-    font-weight: 500;
-    opacity: 1;
-  }
-  .manifesto-stat {
-    margin-top: 60px;
-    padding: 28px 0;
-    border-top: 1px solid rgba(255,255,255,0.15);
-    border-bottom: 1px solid rgba(255,255,255,0.15);
-  }
-  .manifesto-stat-num {
-    font-family: var(--mono);
-    font-size: 48px;
-    font-weight: 300;
-    letter-spacing: -0.02em;
-    line-height: 1;
-  }
-  .manifesto-stat-desc {
-    font-size: 10px;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    opacity: 0.35;
-    margin-top: 8px;
-  }
+.hero-title {
+  font-size: clamp(3rem, 7vw, 7rem);
+  font-weight: 300;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  max-width: 900px;
+}
 
-  /* PRODUCT GRID */
-  #products {
-    border-bottom: 1px solid var(--white);
-  }
-  .products-header {
-    padding: 80px 40px 48px;
-    border-bottom: 1px solid rgba(255,255,255,0.12);
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-  }
-  .products-heading {
-    font-family: var(--serif);
-    font-size: 40px;
-    font-weight: 400;
-  }
-  .products-note {
-    font-size: 10px;
-    letter-spacing: 0.12em;
-    opacity: 0.35;
-    text-align: right;
-  }
-  .product-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-  }
-  .product-card {
-    padding: 60px 48px;
-    position: relative;
-    overflow: hidden;
-  }
-  .product-card:first-child {
-    border-right: 1px solid var(--white);
-  }
-  .product-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 1px;
-    background: rgba(255,255,255,0.12);
-  }
-  .product-tier {
-    font-size: 9px;
-    letter-spacing: 0.24em;
-    text-transform: uppercase;
-    opacity: 0.35;
-    margin-bottom: 32px;
-  }
-  .product-name {
-    font-family: var(--serif);
-    font-size: 38px;
-    font-weight: 400;
-    line-height: 1.05;
-    margin-bottom: 8px;
-  }
-  .product-name em { font-style: italic; }
-  .product-price {
-    font-family: var(--mono);
-    font-size: 13px;
-    letter-spacing: 0.1em;
-    opacity: 0.5;
-    margin-bottom: 48px;
-  }
-  .product-features {
-    list-style: none;
-    margin-bottom: 56px;
-  }
-  .product-features li {
-    font-size: 11px;
-    letter-spacing: 0.08em;
-    line-height: 1.6;
-    padding: 10px 0;
-    border-top: 1px solid rgba(255,255,255,0.08);
-    opacity: 0.7;
-    display: flex;
-    align-items: baseline;
-    gap: 12px;
-  }
-  .product-features li::before {
-    content: '—';
-    opacity: 0.3;
-    flex-shrink: 0;
-  }
-  .product-cta {
-    display: inline-block;
-    font-family: var(--mono);
-    font-size: 10px;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    text-decoration: none;
-    border: 1px solid rgba(255,255,255,0.4);
-    padding: 14px 28px;
-    color: var(--white);
-    cursor: none;
-    transition: background 0.2s, border-color 0.2s;
-  }
-  .product-cta:hover {
-    background: var(--white);
-    color: var(--black);
-    border-color: var(--white);
-  }
-  .product-cta.primary {
-    background: var(--white);
-    color: var(--black);
-    border-color: var(--white);
-  }
-  .product-cta.primary:hover {
-    background: transparent;
-    color: var(--white);
-  }
-  .product-vault-badge {
-    position: absolute;
-    top: 48px;
-    right: 48px;
-    font-size: 9px;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    opacity: 0.2;
-    border: 1px solid currentColor;
-    padding: 4px 10px;
-  }
+/* Sección de producto - Asimétrica y fría */
+.vault-section {
+  padding: 20vh 0;
+  border-top: 1px solid #1a1a1a;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10vw;
+}
 
-  /* MARKET STATUS */
-  #markets {
-    padding: 100px 40px;
-    border-bottom: 1px solid var(--white);
-  }
-  .markets-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    margin-bottom: 56px;
-  }
-  .markets-heading {
-    font-family: var(--serif);
-    font-size: 40px;
-    font-weight: 400;
-  }
-  .markets-timestamp {
-    font-size: 9px;
-    letter-spacing: 0.15em;
-    opacity: 0.3;
-  }
-  .market-table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-  .market-table thead tr {
-    border-bottom: 1px solid rgba(255,255,255,0.15);
-  }
-  .market-table th {
-    font-family: var(--mono);
-    font-size: 9px;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
-    opacity: 0.3;
-    text-align: left;
-    padding: 0 0 16px;
-    font-weight: 400;
-  }
-  .market-table th:last-child { text-align: right; }
-  .market-table td {
-    padding: 24px 0;
-    border-bottom: 1px solid rgba(255,255,255,0.06);
-    vertical-align: middle;
-  }
-  .market-table td:last-child { text-align: right; }
-  .market-name {
-    font-family: var(--serif);
-    font-size: 22px;
-    font-weight: 400;
-  }
-  .market-code {
-    font-size: 9px;
-    letter-spacing: 0.18em;
-    opacity: 0.3;
-    margin-top: 4px;
-    font-family: var(--mono);
-  }
-  .market-segment {
-    font-size: 10px;
-    letter-spacing: 0.1em;
-    opacity: 0.45;
-  }
-  .market-datapoints {
-    font-family: var(--mono);
-    font-size: 13px;
-    letter-spacing: 0.06em;
-  }
-  .market-datapoints .dp-num { font-weight: 500; }
-  .market-datapoints .dp-unit { opacity: 0.3; font-size: 10px; margin-left: 4px; }
-  .market-status {
-    font-family: var(--mono);
-    font-size: 9px;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .status-dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: var(--white);
-    flex-shrink: 0;
-  }
-  .status-dot.live { animation: pulse 1.5s infinite; }
-  .status-dot.scanning {
-    animation: blink 1s step-end infinite;
-  }
-  @keyframes blink {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.1; }
-  }
-  .status-live { opacity: 1; }
-  .status-scanning { opacity: 0.45; }
+.vault-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
 
-  /* FINAL CTA */
-  #cta {
-    padding: 0;
-    text-align: center;
-  }
-  .cta-block {
-    padding: 120px 40px;
-    position: relative;
-    overflow: hidden;
-  }
-  .cta-eyebrow {
-    font-size: 9px;
-    letter-spacing: 0.28em;
-    text-transform: uppercase;
-    opacity: 0.3;
-    margin-bottom: 32px;
-  }
-  .cta-heading {
-    font-family: var(--serif);
-    font-size: clamp(40px, 6vw, 80px);
-    font-weight: 400;
-    line-height: 1.05;
-    max-width: 760px;
-    margin: 0 auto 16px;
-  }
-  .cta-heading em { font-style: italic; opacity: 0.45; }
-  .cta-sub {
-    font-size: 11px;
-    letter-spacing: 0.12em;
-    opacity: 0.35;
-    margin-bottom: 64px;
-  }
-  .cta-btn-group {
-    display: flex;
-    justify-content: center;
-    gap: 16px;
-    flex-wrap: wrap;
-  }
-  .cta-main-btn {
-    display: inline-block;
-    font-family: var(--mono);
-    font-size: 11px;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
-    text-decoration: none;
-    background: var(--white);
-    color: var(--black);
-    border: 1px solid var(--white);
-    padding: 20px 48px;
-    cursor: none;
-    transition: background 0.2s, color 0.2s;
-  }
-  .cta-main-btn:hover {
-    background: transparent;
-    color: var(--white);
-  }
-  .cta-secondary-btn {
-    display: inline-block;
-    font-family: var(--mono);
-    font-size: 11px;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
-    text-decoration: none;
-    background: transparent;
-    color: var(--white);
-    border: 1px solid rgba(255,255,255,0.25);
-    padding: 20px 48px;
-    cursor: none;
-    transition: border-color 0.2s;
-  }
-  .cta-secondary-btn:hover { border-color: var(--white); }
-  .cta-fine-print {
-    margin-top: 36px;
-    font-size: 9px;
-    letter-spacing: 0.14em;
-    opacity: 0.25;
-  }
-  .cta-grid-lines {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    opacity: 0.04;
-    background-image:
-      linear-gradient(var(--white) 1px, transparent 1px),
-      linear-gradient(90deg, var(--white) 1px, transparent 1px);
-    background-size: 60px 60px;
-  }
+.vault-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  color: var(--dim);
+  text-transform: uppercase;
+  margin-bottom: 8vh;
+}
 
-  /* FOOTER */
-  footer {
-    border-top: 1px solid var(--white);
-    padding: 32px 40px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  .footer-logo {
-    font-size: 10px;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
-  }
-  .footer-legal {
-    font-size: 9px;
-    letter-spacing: 0.1em;
-    opacity: 0.25;
-  }
-  .footer-links {
-    display: flex;
-    gap: 24px;
-  }
-  .footer-links a {
-    font-size: 9px;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--white);
-    text-decoration: none;
-    opacity: 0.3;
-    cursor: none;
-    transition: opacity 0.2s;
-  }
-  .footer-links a:hover { opacity: 1; }
+.vault-desc {
+  font-size: 1.25rem;
+  font-weight: 300;
+  line-height: 1.6;
+  color: #cccccc;
+  max-width: 500px;
+  margin-bottom: 4vh;
+}
 
-  /* TICKER */
-  .ticker-bar {
-    background: var(--white);
-    color: var(--black);
-    overflow: hidden;
-    white-space: nowrap;
-    padding: 10px 0;
-    font-size: 10px;
-    letter-spacing: 0.18em;
-  }
-  .ticker-inner {
-    display: inline-block;
-    animation: ticker 28s linear infinite;
-  }
-  .ticker-item {
-    display: inline;
-    padding: 0 48px;
-  }
-  .ticker-sep {
-    opacity: 0.35;
-  }
-  @keyframes ticker {
-    0% { transform: translateX(0); }
-    100% { transform: translateX(-50%); }
-  }
+.specs {
+  list-style: none;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--dim);
+  line-height: 2.5;
+}
 
-  /* RESPONSIVE */
-  @media (max-width: 900px) {
-    #manifesto {
-      grid-template-columns: 1fr;
-      gap: 48px;
-    }
-    .manifesto-left { position: static; }
-    .product-grid { grid-template-columns: 1fr; }
-    .product-card:first-child { border-right: none; border-bottom: 1px solid var(--white); }
-    .hero-sub { flex-direction: column; gap: 32px; }
-    .markets-header { flex-direction: column; align-items: flex-start; gap: 12px; }
-    .products-header { flex-direction: column; align-items: flex-start; gap: 12px; }
+.specs li::before {
+  content: "[+] ";
+  color: var(--fg);
+}
+
+/* La tarjeta de compra */
+.checkout-module {
+  background: #050505;
+  border: 1px solid #1a1a1a;
+  padding: 6vw;
+  display: flex;
+  flex-direction: column;
+}
+
+.price-block {
+  margin-bottom: 6vh;
+}
+
+.price-currency {
+  font-family: var(--mono);
+  font-size: 14px;
+  color: var(--dim);
+  margin-bottom: 1vh;
+  display: block;
+}
+
+.price-amount {
+  font-size: 4rem;
+  font-weight: 300;
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+
+/* Contenedor del botón de PayPal */
+.payment-container {
+  margin-top: auto;
+  width: 100%;
+}
+
+/* Footer técnico */
+footer {
+  padding: 6vh 5vw;
+  border-top: 1px solid #1a1a1a;
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  color: var(--dim);
+  text-transform: uppercase;
+}
+
+@media (max-width: 900px) {
+  .vault-section {
+    grid-template-columns: 1fr;
+    gap: 10vh;
   }
-  @media (max-width: 600px) {
-    .container, #manifesto, #markets, #products, .cta-block, footer {
-      padding-left: 24px;
-      padding-right: 24px;
-    }
-    .nav-inner { padding: 0 24px; }
-    .hero-top-bar, .hero-headline-block { padding-left: 24px; padding-right: 24px; }
-    .product-card { padding: 48px 24px; }
-    .product-vault-badge { display: none; }
-  }
+  .checkout-module { padding: 8vw 6vw; }
+}
 </style>
 </head>
 <body>
 
-<div id="cursor"></div>
-
-<!-- NAVIGATION -->
 <nav>
-  <div class="nav-inner">
-    <span class="nav-logo">Medral</span>
-    <div class="nav-status">
-      <span><span class="live-dot"></span> &nbsp;3 Markets Active</span>
-      <span>Protocol v2.4</span>
-    </div>
-    <button class="nav-cta" onclick="document.getElementById('cta').scrollIntoView({behavior:'smooth'})">Request Access</button>
+  <div class="logo">Med Real</div>
+  <div class="status-indicator">
+    <div class="dot"></div>
+    Protocol Active
   </div>
 </nav>
 
-<!-- TICKER -->
-<div style="margin-top: 52px;">
-  <div class="ticker-bar">
-    <div class="ticker-inner">
-      <span class="ticker-item">CHE — PRIVATE CLINIC NETWORK — 2,847 ACTIVE NODES <span class="ticker-sep">///</span></span>
-      <span class="ticker-item">UAE — TIER-1 REFERRAL CHAIN — SCANNING <span class="ticker-sep">///</span></span>
-      <span class="ticker-item">GBR — SPECIALIST PRIVATE — 14,203 DATA EVENTS TODAY <span class="ticker-sep">///</span></span>
-      <span class="ticker-item">SIGNAL AUDIT — CHF 970 — NEXT ISSUANCE: 72H <span class="ticker-sep">///</span></span>
-      <span class="ticker-item">CHE — PRIVATE CLINIC NETWORK — 2,847 ACTIVE NODES <span class="ticker-sep">///</span></span>
-      <span class="ticker-item">UAE — TIER-1 REFERRAL CHAIN — SCANNING <span class="ticker-sep">///</span></span>
-      <span class="ticker-item">GBR — SPECIALIST PRIVATE — 14,203 DATA EVENTS TODAY <span class="ticker-sep">///</span></span>
-      <span class="ticker-item">SIGNAL AUDIT — CHF 970 — NEXT ISSUANCE: 72H <span class="ticker-sep">///</span></span>
+<div class="container">
+  <section class="hero">
+    <div class="hero-tag">Proprietary Data Extraction</div>
+    <h1 class="hero-title">The end of opacity in private healthcare.</h1>
+  </section>
+
+  <section class="vault-section">
+    <div class="vault-info">
+      <div class="vault-label">01 // Primary Protocol</div>
+      <p class="vault-desc">A surgical extraction of competitive positioning, regulatory exposure, and expansion signals within elite private clinics. Data that cannot be found via public search.</p>
+      <ul class="specs">
+        <li>Entity Risk Assessment</li>
+        <li>Equipment Investment Tracking</li>
+        <li>Delivered via secure PDF in 48h</li>
+      </ul>
     </div>
-  </div>
+
+    <div class="checkout-module">
+      <div class="price-block">
+        <span class="price-currency">GLOBAL DOSSIER</span>
+        <div class="price-amount">$970</div>
+      </div>
+      
+      <div class="payment-container">
+        <div id="paypal-container-7UGCKEL7MPD2W"></div>
+        <script>
+          paypal.HostedButtons({
+            hostedButtonId: "7UGCKEL7MPD2W",
+          }).render("#paypal-container-7UGCKEL7MPD2W")
+        </script>
+      </div>
+    </div>
+  </section>
 </div>
 
-<!-- HERO -->
-<section id="hero">
-  <div class="hero-top-bar fade-up">
-    <div>
-      <span class="hero-label">Protocol — Medical Intelligence</span>
-    </div>
-    <div class="hero-metric">
-      <div class="hero-metric-number" id="live-number">14,203</div>
-      <div class="hero-metric-label">Data Events / Session</div>
-    </div>
-  </div>
-  <div class="hero-headline-block">
-    <h1 class="hero-headline fade-up" style="transition-delay: 0.1s;">
-      The private<br>medical market<br><em>is opaque</em><br>by design.
-    </h1>
-    <div class="hero-sub fade-up" style="transition-delay: 0.25s;">
-      <p class="hero-descriptor">
-        Medral extracts structured intelligence<br>
-        from private healthcare networks<br>
-        across Switzerland, UAE, and the UK.<br>
-        No surveys. No proxies. Signal only.
-      </p>
-      <div class="hero-live-feed">
-        <div class="hero-live-feed-header">
-          <span class="live-dot"></span> Live Feed — CHE/001
-        </div>
-        <div class="feed-row">
-          <span class="feed-key">Avg. Procedure Volume</span>
-          <span class="feed-val" id="f1">+4.2%</span>
-        </div>
-        <div class="feed-row">
-          <span class="feed-key">Pricing Index</span>
-          <span class="feed-val" id="f2">CHF 8,340</span>
-        </div>
-        <div class="feed-row">
-          <span class="feed-key">Network Coverage</span>
-          <span class="feed-val">94.1%</span>
-        </div>
-        <div class="feed-row">
-          <span class="feed-key">Last Ingestion</span>
-          <span class="feed-val" id="f3">0:00:07 ago</span>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- MANIFESTO -->
-<section id="manifesto">
-  <div class="manifesto-left fade-up">
-    <p class="manifesto-title">01 — Manifesto</p>
-    <h2 class="manifesto-heading">Why the current data is wrong.</h2>
-    <div class="manifesto-stat fade-up" style="transition-delay: 0.1s;">
-      <div class="manifesto-stat-num">87%</div>
-      <div class="manifesto-stat-desc">of private clinic revenue is invisible<br>to public market data sources</div>
-    </div>
-  </div>
-  <div class="manifesto-body">
-    <p class="manifesto-paragraph fade-up">
-      Hospital reporting systems were built for compliance, not intelligence. The data your competitors rely on — IMS, IQVIA, government registries — captures the <strong>public layer</strong> of a market that has systematically moved private.
-    </p>
-    <p class="manifesto-paragraph fade-up" style="transition-delay: 0.1s;">
-      In Switzerland, the UAE, and the UK, the most significant clinical volumes, the highest-margin procedures, the real referral networks — <strong>none of this appears in standard datasets.</strong> It is structured to be invisible.
-    </p>
-    <p class="manifesto-paragraph fade-up" style="transition-delay: 0.2s;">
-      Medral does not survey. It does not aggregate public sources. It instruments the private market directly — extracting structured signal at the transaction level. What we produce is not a report. <strong>It is the ground truth.</strong>
-    </p>
-    <p class="manifesto-paragraph fade-up" style="transition-delay: 0.3s;">
-      If you are pricing a market entry, underwriting a clinic acquisition, or allocating capital in private healthcare — you are making decisions on data that is, at best, a shadow of the actual market. <strong>That is the problem Medral was built to eliminate.</strong>
-    </p>
-  </div>
-</section>
-
-<!-- PRODUCTS -->
-<section id="products">
-  <div class="products-header fade-up">
-    <div>
-      <span class="section-index">02 — Intelligence Products</span>
-      <h2 class="products-heading">Choose your clearance level.</h2>
-    </div>
-    <p class="products-note">
-      Both products are issued<br>
-      to verified organizations only.
-    </p>
-  </div>
-  <div class="product-grid">
-    <!-- Signal Audit -->
-    <div class="product-card fade-up">
-      <div class="product-vault-badge">Entry Vault</div>
-      <p class="product-tier">Tier I — Single Audit</p>
-      <h3 class="product-name">Signal<br><em>Audit</em></h3>
-      <p class="product-price">CHF 970 — One-time issuance</p>
-      <ul class="product-features">
-        <li>Market-specific signal report (one jurisdiction)</li>
-        <li>Procedure volume indices, 24-month window</li>
-        <li>Private pricing benchmarks vs. published tariffs</li>
-        <li>Referral network topology map</li>
-        <li>Structured data export (JSON + PDF)</li>
-        <li>48-hour delivery post-verification</li>
-      </ul>
-      <a href="#cta" class="product-cta" onclick="document.getElementById('cta').scrollIntoView({behavior:'smooth'}); return false;">Acquire Audit — CHF 970</a>
-    </div>
-    <!-- Enterprise API -->
-    <div class="product-card fade-up" style="transition-delay: 0.15s;">
-      <div class="product-vault-badge">Enterprise Vault</div>
-      <p class="product-tier">Tier II — Institutional Access</p>
-      <h3 class="product-name">Enterprise<br><em>API</em></h3>
-      <p class="product-price">CHF 50,000+ — Annual license</p>
-      <ul class="product-features">
-        <li>Live API access to all three market feeds</li>
-        <li>Real-time ingestion — updated continuously</li>
-        <li>Full transaction-level schema access</li>
-        <li>Custom query interface + webhook delivery</li>
-        <li>Dedicated signal analyst (quarterly briefings)</li>
-        <li>Compliance-grade audit trail for all data pulls</li>
-        <li>SLA: 99.9% uptime, &lt;200ms response</li>
-      </ul>
-      <a href="#cta" class="product-cta primary" onclick="document.getElementById('cta').scrollIntoView({behavior:'smooth'}); return false;">Apply for Enterprise Access</a>
-    </div>
-  </div>
-</section>
-
-<!-- MARKET STATUS -->
-<section id="markets">
-  <div class="markets-header fade-up">
-    <div>
-      <span class="section-index">03 — Market Status</span>
-      <h2 class="markets-heading">Active intelligence feeds.</h2>
-    </div>
-    <div class="markets-timestamp" id="mkt-time">Refreshed: 00:00:00 UTC</div>
-  </div>
-  <table class="market-table fade-up" style="transition-delay: 0.1s;">
-    <thead>
-      <tr>
-        <th>Market</th>
-        <th>Segment</th>
-        <th>Data Points</th>
-        <th>Coverage</th>
-        <th>Status</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>
-          <div class="market-name">Switzerland</div>
-          <div class="market-code">CHE / MED-001</div>
-        </td>
-        <td><span class="market-segment">Private clinics, Specialist networks</span></td>
-        <td>
-          <div class="market-datapoints">
-            <span class="dp-num">2,847</span>
-            <span class="dp-unit">nodes</span>
-          </div>
-        </td>
-        <td><span class="market-segment">94.1%</span></td>
-        <td>
-          <span class="market-status status-live">
-            <span class="status-dot live"></span> Live
-          </span>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <div class="market-name">United Kingdom</div>
-          <div class="market-code">GBR / MED-002</div>
-        </td>
-        <td><span class="market-segment">BMI, Spire, Independent specialists</span></td>
-        <td>
-          <div class="market-datapoints">
-            <span class="dp-num">6,112</span>
-            <span class="dp-unit">nodes</span>
-          </div>
-        </td>
-        <td><span class="market-segment">89.7%</span></td>
-        <td>
-          <span class="market-status status-live">
-            <span class="status-dot live"></span> Live
-          </span>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <div class="market-name">United Arab Emirates</div>
-          <div class="market-code">UAE / MED-003</div>
-        </td>
-        <td><span class="market-segment">Dubai, Abu Dhabi — Tier-1 private</span></td>
-        <td>
-          <div class="market-datapoints">
-            <span class="dp-num">1,094</span>
-            <span class="dp-unit">nodes</span>
-          </div>
-        </td>
-        <td><span class="market-segment">71.3%</span></td>
-        <td>
-          <span class="market-status status-scanning">
-            <span class="status-dot scanning"></span> Scanning
-          </span>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-  <div style="margin-top: 40px; font-size: 9px; letter-spacing: 0.14em; opacity: 0.2;">
-    Node counts represent verified ingestion points. Coverage reflects accessible private-pay volume as % of estimated total market.
-  </div>
-</section>
-
-<!-- FINAL CTA -->
-<section id="cta">
-  <div class="cta-block">
-    <div class="cta-grid-lines"></div>
-    <div style="position: relative; z-index: 1;">
-      <p class="cta-eyebrow fade-up">Begin Protocol</p>
-      <h2 class="cta-heading fade-up" style="transition-delay: 0.1s;">
-        The market exists.<br>The data is <em>already there.</em>
-      </h2>
-      <p class="cta-sub fade-up" style="transition-delay: 0.2s;">
-        Access requires organizational verification. No trials. No demos.
-      </p>
-      <div class="cta-btn-group fade-up" style="transition-delay: 0.3s;">
-        <a href="https://buy.stripe.com/" class="cta-main-btn">Acquire Signal Audit — CHF 970</a>
-        <a href="mailto:access@medral.com" class="cta-secondary-btn">Enterprise Inquiry</a>
-      </div>
-      <p class="cta-fine-print fade-up" style="transition-delay: 0.4s;">
-        Institutional verification required &nbsp;///&nbsp; NDA issued on contact &nbsp;///&nbsp; Medral AG, Zurich
-      </p>
-    </div>
-  </div>
-</section>
-
-<!-- FOOTER -->
 <footer>
-  <span class="footer-logo">Medral</span>
-  <div class="footer-links">
-    <a href="#">Protocol</a>
-    <a href="#">Legal</a>
-    <a href="#">Contact</a>
-  </div>
-  <span class="footer-legal">© 2025 Medral AG — Zurich, Switzerland</span>
+  <div>© 2026 Med Real Intelligence</div>
+  <div>Encrypted Connection</div>
 </footer>
 
-<script>
-  // CURSOR
-  const cursor = document.getElementById('cursor');
-  let mx = 0, my = 0, cx = 0, cy = 0;
-  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
-  (function animCursor() {
-    cx += (mx - cx) * 0.18;
-    cy += (my - cy) * 0.18;
-    cursor.style.left = cx + 'px';
-    cursor.style.top = cy + 'px';
-    requestAnimationFrame(animCursor);
-  })();
-  document.querySelectorAll('a, button, .product-cta, .cta-main-btn, .cta-secondary-btn').forEach(el => {
-    el.addEventListener('mouseenter', () => cursor.classList.add('expanded'));
-    el.addEventListener('mouseleave', () => cursor.classList.remove('expanded'));
-  });
-
-  // INTERSECTION OBSERVER — fade-up
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(e => {
-      if (e.isIntersecting) {
-        e.target.classList.add('visible');
-        observer.unobserve(e.target);
-      }
-    });
-  }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
-  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
-
-  // LIVE COUNTER — simulated
-  let count = 14203;
-  setInterval(() => {
-    count += Math.floor(Math.random() * 7) - 1;
-    const el = document.getElementById('live-number');
-    if (el) el.textContent = count.toLocaleString();
-  }, 2000);
-
-  // LIVE FEED TIMER
-  let secs = 7;
-  setInterval(() => {
-    secs = (secs + 1) % 120;
-    const el = document.getElementById('f3');
-    if (el) el.textContent = '0:00:' + String(secs).padStart(2,'0') + ' ago';
-    // Subtle price drift
-    const base = 8340 + (Math.random() > 0.5 ? 10 : -10);
-    const f2 = document.getElementById('f2');
-    if (f2) f2.textContent = 'CHF ' + base.toLocaleString();
-  }, 1000);
-
-  // MARKET TIMESTAMP
-  function updateTime() {
-    const now = new Date();
-    const t = now.toUTCString().split(' ')[4];
-    const el = document.getElementById('mkt-time');
-    if (el) el.textContent = 'Refreshed: ' + t + ' UTC';
-  }
-  updateTime();
-  setInterval(updateTime, 1000);
-</script>
 </body>
 </html>
