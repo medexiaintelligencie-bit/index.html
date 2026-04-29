@@ -3,210 +3,224 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MED REAL | Private Medical Intelligence</title>
+<title>MED REAL | Private Intelligence Protocol</title>
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@300;400;500&family=Inter:wght@300;400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Geist+Mono:wght@300;400&display=swap" rel="stylesheet">
 
 <script src="https://www.paypal.com/sdk/js?client-id=BAA-IQrQ_WrHxJ_ezZLZIETUNCCWTwLr4qOXFJ_7aShFPO8kMCNOFmDdJkQD8PaIxfHJ-LbFn8ZGMvASKg&components=hosted-buttons&disable-funding=venmo&currency=USD"></script>
 
 <style>
-/* Reset y variables extremas */
-*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+/* Reset y Estilos Base Extremos */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; outline: none; }
 :root {
-  --bg: #000000;
-  --fg: #FFFFFF;
-  --dim: #777777;
-  --mono: 'Geist Mono', monospace;
-  --sans: 'Inter', sans-serif;
+  --bg: #FFFFFF; /* Fondo Blanco Puro */
+  --fg: #000000; /* Texto Negro Absoluto */
+  --dim: #888888; /* Gris para datos técnicos */
+  --serif: 'Cormorant Garamond', serif; /* Para titulares de autoridad */
+  --mono: 'Geist Mono', monospace; /* Para datos y protocolo */
 }
 
 body {
   background-color: var(--bg);
   color: var(--fg);
-  font-family: var(--sans);
+  font-family: var(--serif);
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
+  line-height: 1.1;
 }
 
-/* Espaciado masivo para proyectar "caro" */
+/* Espaciado Masivo y Asimetría */
 .container {
   width: 100%;
-  max-width: 1400px;
+  max-width: 1600px;
   margin: 0 auto;
-  padding: 0 5vw;
+  padding: 0 8vw; /* Márgenes laterales masivos */
 }
 
-/* Navegación ultra minimalista */
+/* Navegación como un terminal */
 nav {
-  padding: 4vh 5vw;
+  padding: 5vh 8vw;
   display: flex;
   justify-content: space-between;
   align-items: center;
   position: fixed;
   top: 0;
   width: 100%;
-  background: var(--bg);
+  background: rgba(255,255,255,0.95);
   z-index: 100;
+  border-bottom: 1px solid #f0f0f0;
 }
 
 .logo {
   font-family: var(--mono);
-  font-size: 12px;
-  font-weight: 500;
-  letter-spacing: 0.3em;
+  font-size: 11px;
+  letter-spacing: 0.4em;
   text-transform: uppercase;
-  color: var(--fg);
 }
 
-.status-indicator {
+.protocol-status {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   font-family: var(--mono);
   font-size: 10px;
-  letter-spacing: 0.2em;
   color: var(--dim);
   text-transform: uppercase;
 }
 
 .dot {
-  width: 4px;
-  height: 4px;
-  background-color: var(--fg);
+  width: 3px;
+  height: 3px;
+  background-color: #00FF00; /* Punto verde de "activo" */
   border-radius: 50%;
-  animation: pulse 2s infinite;
 }
 
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.2; }
-}
-
-/* Hero Section con espacio abismal */
+/* Hero Section: Solo tipografía de autoridad */
 .hero {
-  height: 100vh;
+  height: 90vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
+  padding-top: 15vh;
 }
 
-.hero-tag {
+.hero-id {
   font-family: var(--mono);
   font-size: 11px;
-  letter-spacing: 0.4em;
   color: var(--dim);
-  text-transform: uppercase;
-  margin-bottom: 4vh;
+  margin-bottom: 3vh;
 }
 
 .hero-title {
-  font-size: clamp(3rem, 7vw, 7rem);
+  font-size: clamp(3rem, 6vw, 6rem);
   font-weight: 300;
-  line-height: 1.05;
-  letter-spacing: -0.03em;
-  max-width: 900px;
+  letter-spacing: -0.04em;
+  max-width: 1100px;
+  line-height: 1.0;
 }
 
-/* Sección de producto - Asimétrica y fría */
-.vault-section {
-  padding: 20vh 0;
-  border-top: 1px solid #1a1a1a;
+/* Sección de Inteligencia: Layout de Dossier */
+.dossier-section {
+  padding: 15vh 0;
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 2fr 1fr; /* Columna izquierda grande, derecha pequeña */
   gap: 10vw;
+  align-items: start;
 }
 
-.vault-info {
+/* Lado Izquierdo: Descripción Técnica */
+.intel-description {
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
 }
 
-.vault-label {
+.intel-header {
+  font-family: var(--mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  color: var(--dim);
+  letter-spacing: 0.3em;
+  margin-bottom: 8vh;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 1vh;
+  width: fit-content;
+}
+
+.intel-text {
+  font-size: 1.6rem;
+  font-weight: 300;
+  color: #333;
+  max-width: 700px;
+  line-height: 1.5;
+  margin-bottom: 5vh;
+}
+
+.intel-data {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--dim);
+  line-height: 2.8;
+  list-style: none;
+}
+
+.intel-data li::before {
+  content: "» ";
+  color: #000;
+}
+
+/* Lado Derecho: Adquisición y Pago */
+.acquisition-protocol {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #eee;
+  padding: 4vw;
+  margin-top: 10vh; /* Desfasado asimétricamente */
+}
+
+.protocol-id {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--dim);
+  margin-bottom: 2vh;
+}
+
+.fee-schedule {
+  margin-bottom: 5vh;
+}
+
+.fee-label {
+  font-size: 1.1rem;
+  font-weight: 400;
+  margin-bottom: 1vh;
+  display: block;
+}
+
+.fee-amount {
+  font-size: 3.5rem;
+  font-weight: 300;
+  letter-spacing: -0.05em;
+  line-height: 1;
+}
+
+.fee-currency {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--dim);
+  margin-left: 10px;
+}
+
+/* Encapsulando PayPal en un contenedor discreto */
+.payment-module {
+  width: 100%;
+  max-width: 300px; /* Reduciendo el tamaño al extremo */
+  margin: 0 auto;
+}
+
+/* Footer técnico */
+footer {
+  padding: 5vh 8vw;
+  border-top: 1px solid #eee;
+  display: flex;
+  justify-content: space-between;
   font-family: var(--mono);
   font-size: 10px;
   letter-spacing: 0.3em;
   color: var(--dim);
   text-transform: uppercase;
-  margin-bottom: 8vh;
 }
 
-.vault-desc {
-  font-size: 1.25rem;
-  font-weight: 300;
-  line-height: 1.6;
-  color: #cccccc;
-  max-width: 500px;
-  margin-bottom: 4vh;
-}
-
-.specs {
-  list-style: none;
-  font-family: var(--mono);
-  font-size: 11px;
-  color: var(--dim);
-  line-height: 2.5;
-}
-
-.specs li::before {
-  content: "[+] ";
-  color: var(--fg);
-}
-
-/* La tarjeta de compra */
-.checkout-module {
-  background: #050505;
-  border: 1px solid #1a1a1a;
-  padding: 6vw;
-  display: flex;
-  flex-direction: column;
-}
-
-.price-block {
-  margin-bottom: 6vh;
-}
-
-.price-currency {
-  font-family: var(--mono);
-  font-size: 14px;
-  color: var(--dim);
-  margin-bottom: 1vh;
-  display: block;
-}
-
-.price-amount {
-  font-size: 4rem;
-  font-weight: 300;
-  letter-spacing: -0.04em;
-  line-height: 1;
-}
-
-/* Contenedor del botón de PayPal */
-.payment-container {
-  margin-top: auto;
-  width: 100%;
-}
-
-/* Footer técnico */
-footer {
-  padding: 6vh 5vw;
-  border-top: 1px solid #1a1a1a;
-  display: flex;
-  justify-content: space-between;
-  font-family: var(--mono);
-  font-size: 10px;
-  letter-spacing: 0.2em;
-  color: var(--dim);
-  text-transform: uppercase;
-}
-
-@media (max-width: 900px) {
-  .vault-section {
+/* Ajustes Móviles */
+@media (max-width: 1000px) {
+  .dossier-section {
     grid-template-columns: 1fr;
     gap: 10vh;
   }
-  .checkout-module { padding: 8vw 6vw; }
+  .acquisition-protocol {
+    margin-top: 0;
+    padding: 8vw;
+  }
 }
 </style>
 </head>
@@ -214,36 +228,39 @@ footer {
 
 <nav>
   <div class="logo">Med Real</div>
-  <div class="status-indicator">
+  <div class="protocol-status">
     <div class="dot"></div>
-    Protocol Active
+    Intelligence Stream: Active
   </div>
 </nav>
 
 <div class="container">
   <section class="hero">
-    <div class="hero-tag">Proprietary Data Extraction</div>
-    <h1 class="hero-title">The end of opacity in private healthcare.</h1>
+    <div class="hero-id">PRVT_DATA_INTEL // REV. 2026</div>
+    <h1 class="hero-title">Access to opaque private healthcare markets through proprietary data extraction.</h1>
   </section>
 
-  <section class="vault-section">
-    <div class="vault-info">
-      <div class="vault-label">01 // Primary Protocol</div>
-      <p class="vault-desc">A surgical extraction of competitive positioning, regulatory exposure, and expansion signals within elite private clinics. Data that cannot be found via public search.</p>
-      <ul class="specs">
-        <li>Entity Risk Assessment</li>
-        <li>Equipment Investment Tracking</li>
-        <li>Delivered via secure PDF in 48h</li>
+  <section class="dossier-section">
+    <div class="intel-description">
+      <div class="intel-header">01 // Signal Audit Dossier</div>
+      <p class="intel-text">A surgical analysis of a single private medical entity. We convert invisible signals—competitive positioning, regulatory risk, and expansion patterns—into structured, actionable intelligence.</p>
+      <ul class="intel-data">
+        <li>Entity Risk Profile Assessment</li>
+        <li>Capital Equipment Procurement Tracking</li>
+        <li>Jurisdictional Mapping (Switzerland | UAE | UK)</li>
+        <li>Delivered via Encrypted Dossier within 48h</li>
       </ul>
     </div>
 
-    <div class="checkout-module">
-      <div class="price-block">
-        <span class="price-currency">GLOBAL DOSSIER</span>
-        <div class="price-amount">$970</div>
+    <div class="acquisition-protocol">
+      <div class="protocol-id">PROTOCOL_ACQUISITION_SEQ</div>
+      
+      <div class="fee-schedule">
+        <span class="fee-label">Dossier Acquisition Fee</span>
+        <div class="fee-amount">970<span class="fee-currency">USD</span></div>
       </div>
       
-      <div class="payment-container">
+      <div class="payment-module">
         <div id="paypal-container-7UGCKEL7MPD2W"></div>
         <script>
           paypal.HostedButtons({
@@ -256,8 +273,8 @@ footer {
 </div>
 
 <footer>
-  <div>© 2026 Med Real Intelligence</div>
-  <div>Encrypted Connection</div>
+  <div>© 2026 Med Real // Confidential</div>
+  <div>256-bit Encryption</div>
 </footer>
 
 </body>
